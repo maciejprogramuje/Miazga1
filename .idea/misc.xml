@@ -5,6 +5,10 @@
       <map>
         <entry key="..\:/Users/mszymczyk/AndroidStudioProjects/Miazga1/app/src/main/res/drawable/item_layout.xml" value="0.3715" />
         <entry key="..\:/Users/mszymczyk/AndroidStudioProjects/Miazga1/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Users/mszymczyk/AndroidStudioProjects/Miazga1/app/src/main/res/layout/activity_season.xml" value="0.19166666666666668" />
+        <entry key="..\:/Users/mszymczyk/AndroidStudioProjects/Miazga1/app/src/main/res/layout/content_season.xml" value="0.371875" />
+        <entry key="..\:/Users/mszymczyk/AndroidStudioProjects/Miazga1/app/src/main/res/layout/fragment_first.xml" value="0.25" />
+        <entry key="..\:/Users/mszymczyk/AndroidStudioProjects/Miazga1/app/src/main/res/layout/fragment_second.xml" value="0.371875" />
         <entry key="..\:/Users/mszymczyk/AndroidStudioProjects/Miazga1/app/src/main/res/layout/season_item.xml" value="0.371875" />
       </map>
     </option>
