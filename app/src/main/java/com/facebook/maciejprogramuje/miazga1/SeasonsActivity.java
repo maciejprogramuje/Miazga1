@@ -9,9 +9,10 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.facebook.maciejprogramuje.miazga1.R;
 import com.facebook.maciejprogramuje.miazga1.databinding.ActivitySeasonBinding;
 
-public class SeasonActivity extends AppCompatActivity {
+public class SeasonsActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
     private ActivitySeasonBinding binding;
 
