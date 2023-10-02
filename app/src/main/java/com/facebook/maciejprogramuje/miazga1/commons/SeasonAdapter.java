@@ -8,19 +8,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.facebook.maciejprogramuje.miazga1.R;
-import com.facebook.maciejprogramuje.miazga1.models.SeasonItem;
+import com.facebook.maciejprogramuje.miazga1.models.Season;
 import com.facebook.maciejprogramuje.miazga1.views.SeasonsFragment;
 
 import java.util.List;
 
 public class SeasonAdapter extends RecyclerView.Adapter<SeasonItemViewHolder> {
     Context context;
-    List<SeasonItem> seasonItems;
+    List<Season> seasons;
     SeasonsFragment seasonsFragment;
 
-    public SeasonAdapter(Context context, List<SeasonItem> seasonItems, SeasonsFragment seasonsFragment) {
+    public SeasonAdapter(Context context, List<Season> seasons, SeasonsFragment seasonsFragment) {
         this.context = context;
-        this.seasonItems = seasonItems;
+        this.seasons = seasons;
         this.seasonsFragment = seasonsFragment;
     }
 
@@ -28,17 +28,18 @@ public class SeasonAdapter extends RecyclerView.Adapter<SeasonItemViewHolder> {
     @Override
     public SeasonItemViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.season_item, viewGroup, false);
+
         return new SeasonItemViewHolder(view, seasonsFragment);
     }
 
     @Override
     public void onBindViewHolder(@NonNull SeasonItemViewHolder seasonItemViewHolder, int position) {
-        SeasonItem seasonItem = seasonItems.get(position);
-        seasonItemViewHolder.setSeasonItem(seasonItem);
+        Season season = seasons.get(position);
+        seasonItemViewHolder.setSeasonItem(season);
     }
 
     @Override
     public int getItemCount() {
-        return seasonItems.size();
+        return seasons.size();
     }
 }

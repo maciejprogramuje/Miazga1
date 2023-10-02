@@ -7,6 +7,6 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
-    <string name="hello_seasons_fragment">Hello seasonItems fragment</string>
-    <string name="hello_episodes_fragment">Hello episodeItems fragment. Arg: %1$s</string>
+    <string name="hello_seasons_fragment">Hello seasons fragment</string>
+    <string name="hello_episodes_fragment">Hello episodes fragment. Arg: %1$s</string>
 </resources>

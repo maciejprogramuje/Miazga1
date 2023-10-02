@@ -2,33 +2,31 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content" >
 
     <TextView
-        android:id="@+id/seasonLabelTextView"
+        android:id="@+id/episode_label_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:text="Sezon"
+        android:text="Epizod"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/seasonNumberTextView"
+        android:id="@+id/episode_number_text_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="19dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:text="ssssssssss"
+        android:text="eeeeeeeeee"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/seasonLabelTextView" />
-
+        app:layout_constraintTop_toBottomOf="@+id/episode_label_text_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
