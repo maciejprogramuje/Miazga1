@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.maciejprogramuje.miazga1.R;
 import com.facebook.maciejprogramuje.miazga1.ReadBase;
-import com.facebook.maciejprogramuje.miazga1.SeasonsActivity;
 import com.facebook.maciejprogramuje.miazga1.commons.EpisodeAdapter;
 import com.facebook.maciejprogramuje.miazga1.databinding.FragmentEpisodesBinding;
 import com.facebook.maciejprogramuje.miazga1.models.Season;
@@ -44,10 +43,10 @@ public class EpisodesFragment extends Fragment {
 
         RecyclerView episodesRecyclerView = view.findViewById(R.id.episodes_recycler_view);
         episodesRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        EpisodeAdapter episodeAdapter = new EpisodeAdapter(view.getContext(),
+        /*EpisodeAdapter episodeAdapter = new EpisodeAdapter(view.getContext(),
                 seasons.get(seasonNumber).getEpisodes(),
-                EpisodesFragment.this);
-        episodesRecyclerView.setAdapter(episodeAdapter);
+                EpisodesFragment.this);*/
+        //episodesRecyclerView.setAdapter(episodeAdapter);
     }
 
     @Override

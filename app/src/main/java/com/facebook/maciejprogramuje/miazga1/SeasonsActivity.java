@@ -16,7 +16,6 @@ public class SeasonsActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
     private ActivitySeasonBinding binding;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

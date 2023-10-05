@@ -1,27 +1,31 @@
 package com.facebook.maciejprogramuje.miazga1.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Season {
-    int seasonNumber;
-    String seasonName;
-    List<Episode> episodes;
+    private int seasonNumber;
+    private String seasonName;
 
-    public Season(int seasonNumber, String seasonName, List<Episode> episodes) {
+    public Season(int seasonNumber, String seasonName) {
         this.seasonNumber = seasonNumber;
         this.seasonName = seasonName;
-        this.episodes = episodes;
     }
 
     public int getSeasonNumber() {
         return seasonNumber;
     }
 
+    public void setSeasonNumber(int seasonNumber) {
+        this.seasonNumber = seasonNumber;
+    }
+
     public String getSeasonName() {
         return seasonName;
     }
 
-    public List<Episode> getEpisodes() {
-        return episodes;
+    public void setSeasonName(String seasonName) {
+        this.seasonName = seasonName;
     }
+
 }
