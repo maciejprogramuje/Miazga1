@@ -15,7 +15,7 @@ public class EpisodeItemViewHolder extends RecyclerView.ViewHolder {
     TextView episodeNameTextView;
     int position;
 
-    public EpisodeItemViewHolder(View itemView, EpisodesFragment episodesFragment) {
+    public EpisodeItemViewHolder(View itemView) {
         super(itemView);
         episodeNameTextView = itemView.findViewById(R.id.episode_name_text_view);
 

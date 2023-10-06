@@ -1,10 +1,12 @@
 package com.facebook.maciejprogramuje.miazga1.views;
 
+import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +46,8 @@ public class SeasonsFragment extends Fragment {
                 SeasonsFragment.this);
         seasonRecyclerView.setAdapter(seasonAdapter);
     }
+
+
 
     @Override
     public void onDestroyView() {
