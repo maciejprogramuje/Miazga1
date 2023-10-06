@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +17,13 @@ import com.facebook.maciejprogramuje.miazga1.R;
 import com.facebook.maciejprogramuje.miazga1.commons.SeasonAdapter;
 import com.facebook.maciejprogramuje.miazga1.models.MovieDbHandler;
 import com.facebook.maciejprogramuje.miazga1.databinding.FragmentSeasonsBinding;
+import com.facebook.maciejprogramuje.miazga1.models.Season;
+
+import java.util.List;
 
 public class SeasonsFragment extends Fragment {
     private FragmentSeasonsBinding binding;
+    private MovieDbHandler dbSeasonsFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -29,25 +34,16 @@ public class SeasonsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        MovieDbHandler db = null;
-        try {
-            db = new MovieDbHandler(view.getContext());
-            db.fillDatabase();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        //List<Season> seasons = ((ReadBase) getActivity().getApplicationContext()).getSeasons();
+        dbSeasonsFragment = new MovieDbHandler(view.getContext());
+        //db.fillDatabase();
 
         RecyclerView seasonRecyclerView = view.findViewById(R.id.season_recycler_view);
         seasonRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         SeasonAdapter seasonAdapter = new SeasonAdapter(view.getContext(),
-                db,
+                dbSeasonsFragment,
                 SeasonsFragment.this);
         seasonRecyclerView.setAdapter(seasonAdapter);
     }
-
-
 
     @Override
     public void onDestroyView() {

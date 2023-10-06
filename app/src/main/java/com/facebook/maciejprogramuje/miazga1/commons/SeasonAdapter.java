@@ -1,8 +1,11 @@
 package com.facebook.maciejprogramuje.miazga1.commons;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,8 +36,7 @@ public class SeasonAdapter extends RecyclerView.Adapter<SeasonItemViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull SeasonItemViewHolder seasonItemViewHolder, int position) {
-        Season season = db.getSeason(position);
-        seasonItemViewHolder.setSeasonItem(season);
+        seasonItemViewHolder.setSeasonItem(position, db);
     }
 
     @Override

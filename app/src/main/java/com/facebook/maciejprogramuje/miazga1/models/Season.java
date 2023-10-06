@@ -4,10 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Season {
+    private int seasonId;
     private int seasonNumber;
     private String seasonName;
 
     public Season(int seasonNumber, String seasonName) {
+        this.seasonNumber = seasonNumber;
+        this.seasonName = seasonName;
+    }
+
+    public Season(int seasonId, int seasonNumber, String seasonName) {
+        this.seasonId = seasonId;
         this.seasonNumber = seasonNumber;
         this.seasonName = seasonName;
     }
@@ -28,4 +35,11 @@ public class Season {
         this.seasonName = seasonName;
     }
 
+    public int getSeasonId() {
+        return seasonId;
+    }
+
+    public void setSeasonId(int seasonId) {
+        this.seasonId = seasonId;
+    }
 }

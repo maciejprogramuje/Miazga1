@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -13,7 +14,7 @@ import java.util.List;
 
 public class MovieDbHandler extends SQLiteOpenHelper {
     // **********************************************************************
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "miazgaMoviesDb";
     // **********************************************************************
     private static final String TABLE_SEASONS = "seasonsTable";
@@ -33,7 +34,6 @@ public class MovieDbHandler extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    //todo
     public void fillDatabase() {
         for (int i = 0; i < 10; i++) {
             addSeason(new Season(i, "Sezon " + i));
@@ -79,7 +79,6 @@ public class MovieDbHandler extends SQLiteOpenHelper {
         values.put(KEY_SEASON_NAME, season.getSeasonName());
 
         db.insert(TABLE_SEASONS, null, values);
-        db.close();
     }
 
     public void addEpisode(Episode episode) {
@@ -92,10 +91,9 @@ public class MovieDbHandler extends SQLiteOpenHelper {
         values.put(KEY_EPISODE_FK_SEASON, episode.getSeasonFK());
 
         db.insert(TABLE_EPISODES, null, values);
-        db.close();
     }
 
-    public Season getSeason(int seasonNumber) {
+    public Season getSeason(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_SEASONS, new String[]{
@@ -103,8 +101,8 @@ public class MovieDbHandler extends SQLiteOpenHelper {
                         KEY_SEASON_NUMBER,
                         KEY_SEASON_NAME
                 },
-                KEY_SEASON_NUMBER + "=?",
-                new String[]{String.valueOf(seasonNumber)},
+                KEY_SEASON_ID + "=?",
+                new String[]{String.valueOf(id + 1)},
                 null,
                 null,
                 null,
@@ -114,17 +112,19 @@ public class MovieDbHandler extends SQLiteOpenHelper {
             cursor.moveToFirst();
 
         assert cursor != null;
+
         Season season = new Season(
                 Integer.parseInt(cursor.getString(0)),
-                cursor.getString(1)
+                Integer.parseInt(cursor.getString(1)),
+                cursor.getString(2)
         );
 
-        cursor.close();
+        //cursor.close();
 
         return season;
     }
 
-    public Episode getEpisode(int episodeNumber) {
+    public Episode getEpisode(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_EPISODES, new String[]{
@@ -134,8 +134,8 @@ public class MovieDbHandler extends SQLiteOpenHelper {
                         KEY_EPISODE_WATCHED,
                         KEY_EPISODE_FK_SEASON
                 },
-                KEY_EPISODE_NUMBER + "=?",
-                new String[]{String.valueOf(episodeNumber)},
+                KEY_EPISODE_ID + "=?",
+                new String[]{String.valueOf(id + 1)},
                 null,
                 null,
                 null,
@@ -147,12 +147,13 @@ public class MovieDbHandler extends SQLiteOpenHelper {
         assert cursor != null;
         Episode episode = new Episode(
                 Integer.parseInt(cursor.getString(0)),
-                cursor.getString(1),
-                Boolean.parseBoolean(cursor.getString(2)),
-                Integer.parseInt(cursor.getString(3))
+                Integer.parseInt(cursor.getString(1)),
+                cursor.getString(2),
+                Boolean.parseBoolean(cursor.getString(3)),
+                Integer.parseInt(cursor.getString(4))
         );
 
-        cursor.close();
+        //cursor.close();
 
         return episode;
     }
@@ -169,13 +170,14 @@ public class MovieDbHandler extends SQLiteOpenHelper {
             do {
                 Season season = new Season(
                         Integer.parseInt(cursor.getString(0)),
-                        cursor.getString(1)
+                        Integer.parseInt(cursor.getString(1)),
+                        cursor.getString(2)
                 );
                 seasons.add(season);
             } while (cursor.moveToNext());
         }
 
-        cursor.close();
+        //cursor.close();
 
         return seasons;
     }
@@ -192,15 +194,16 @@ public class MovieDbHandler extends SQLiteOpenHelper {
             do {
                 Episode episode = new Episode(
                         Integer.parseInt(cursor.getString(0)),
-                        cursor.getString(1),
-                        Boolean.parseBoolean(cursor.getString(2)),
-                        Integer.parseInt(cursor.getString(3))
+                        Integer.parseInt(cursor.getString(1)),
+                        cursor.getString(2),
+                        Boolean.parseBoolean(cursor.getString(3)),
+                        Integer.parseInt(cursor.getString(4))
                 );
                 episodes.add(episode);
             } while (cursor.moveToNext());
         }
 
-        cursor.close();
+        //cursor.close();
 
         return episodes;
     }
@@ -214,9 +217,9 @@ public class MovieDbHandler extends SQLiteOpenHelper {
 
         return db.update(TABLE_SEASONS,
                 values,
-                KEY_SEASON_NUMBER + " = ?",
+                KEY_SEASON_ID + " = ?",
                 new String[]{
-                        String.valueOf(season.getSeasonNumber())
+                        String.valueOf(season.getSeasonId())
                 });
     }
 
@@ -229,9 +232,9 @@ public class MovieDbHandler extends SQLiteOpenHelper {
 
         return db.update(TABLE_EPISODES,
                 values,
-                KEY_EPISODE_NUMBER + " = ?",
+                KEY_EPISODE_ID + " = ?",
                 new String[]{
-                        String.valueOf(episode.getEpisodeNumber())
+                        String.valueOf(episode.getEpisodeId())
                 });
     }
 
@@ -239,36 +242,32 @@ public class MovieDbHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.delete(TABLE_SEASONS,
-                KEY_SEASON_NUMBER + " = ?",
+                KEY_SEASON_ID + " = ?",
                 new String[]{
-                        String.valueOf(season.getSeasonNumber())
+                        String.valueOf(season.getSeasonId())
                 });
 
         db.delete(TABLE_EPISODES,
                 KEY_EPISODE_FK_SEASON + " = ?",
                 new String[]{
-                        String.valueOf(season.getSeasonNumber())
+                        String.valueOf(season.getSeasonId())
                 });
-
-        db.close();
     }
 
     public void deleteEpisode(Episode episode) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.delete(TABLE_EPISODES,
-                KEY_EPISODE_NUMBER + " = ?",
+                KEY_EPISODE_ID + " = ?",
                 new String[]{
-                        String.valueOf(episode.getEpisodeNumber())
+                        String.valueOf(episode.getEpisodeId())
                 });
-
-        db.close();
     }
 
     public List<Episode> getAllEpisodesFromSeason(Season season) {
         List<Episode> episodes = new ArrayList<>();
 
-        String selectQuery = "SELECT * FROM " + TABLE_EPISODES + " WHERE " + KEY_EPISODE_FK_SEASON + " = " + season.getSeasonNumber();
+        String selectQuery = "SELECT * FROM " + TABLE_EPISODES + " WHERE " + KEY_EPISODE_FK_SEASON + " = " + season.getSeasonId();
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -277,15 +276,16 @@ public class MovieDbHandler extends SQLiteOpenHelper {
             do {
                 Episode episode = new Episode(
                         Integer.parseInt(cursor.getString(0)),
-                        cursor.getString(1),
-                        Boolean.parseBoolean(cursor.getString(2)),
-                        Integer.parseInt(cursor.getString(3))
+                        Integer.parseInt(cursor.getString(1)),
+                        cursor.getString(2),
+                        Boolean.parseBoolean(cursor.getString(3)),
+                        Integer.parseInt(cursor.getString(4))
                 );
                 episodes.add(episode);
             } while (cursor.moveToNext());
         }
 
-        cursor.close();
+        //cursor.close();
 
         return episodes;
     }
@@ -294,7 +294,7 @@ public class MovieDbHandler extends SQLiteOpenHelper {
         String countQuery = "SELECT  * FROM " + TABLE_SEASONS;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
-        cursor.close();
+        //cursor.close();
 
         return cursor.getCount();
     }
@@ -303,7 +303,7 @@ public class MovieDbHandler extends SQLiteOpenHelper {
         String countQuery = "SELECT  * FROM " + TABLE_EPISODES;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
-        cursor.close();
+        //cursor.close();
 
         return cursor.getCount();
     }
