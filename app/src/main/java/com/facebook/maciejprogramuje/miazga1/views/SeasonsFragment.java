@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.facebook.maciejprogramuje.miazga1.MediaTest;
 import com.facebook.maciejprogramuje.miazga1.R;
 import com.facebook.maciejprogramuje.miazga1.commons.SeasonAdapter;
 import com.facebook.maciejprogramuje.miazga1.models.MovieDbHandler;
@@ -36,8 +37,11 @@ public class SeasonsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
+        new MediaTest(view);
+
         dbSeasonsFragment = new MovieDbHandler(view.getContext());
-        //db.fillDatabase();
+        //dbSeasonsFragment.fillDatabase();
 
         RecyclerView seasonRecyclerView = view.findViewById(R.id.season_recycler_view);
         seasonRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
