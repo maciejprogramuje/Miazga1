@@ -42,40 +42,25 @@ public class VideoDbHandler extends SQLiteOpenHelper {
         Log.w("video9", "getSeasonsCount=" + getSeasonsCount() + ", getEpisodesCount=" + getEpisodesCount());
 
         for (Video video : videos) {
-            if (getSeason(video.getSeasonNumber()) == null) {
-                Log.w("video9", "NULL " + video.getName() + ", s=" + video.getSeasonNumber() + ", e=" + video.getEpisodeNumber());
-                addSeason(new Season(video.getSeasonNumber(), "Sezon nr." + video.getSeasonNumber()));
+            Season season = new Season(video.getSeasonNumber(), "Sezon nr." + video.getSeasonNumber());
+
+            if (getSeasonByNumber(video.getSeasonNumber()) == null) {
+                addSeason(season);
+                Log.w("video9", "DODAŁEM " + season.getSeasonNumber() + ", " + season.getSeasonName());
             } else {
-                Log.w("video9", "NOT NULL " + video.getName() + ", s=" + video.getSeasonNumber() + ", e=" + video.getEpisodeNumber());
+                Log.w("video9", "POMINAŁEM " + season.getSeasonNumber() + ", " + season.getSeasonName());
             }
 
-          /*  if (getSeasonsCount() == 0) {
-
-            } else {
-                for (Season s : getAllSeasons()) {
-                    if (s.getSeasonNumber() != video.getSeasonNumber()) {
-                        addSeason(new Season(video.getSeasonNumber(), "Sezon nr." + video.getSeasonNumber()));
-                    }
-
-                    if (getEpisodesCount() == 0) {
-                        addEpisode(new Episode(video.getEpisodeNumber(), video.getName(), false, video.getSeasonNumber()));
-                    } else {
-                        for (Episode e : getAllEpisodesFromSeason(s)) {
-                            if (e.getEpisodeNumber() != video.getEpisodeNumber()) {
-                                addEpisode(new Episode(video.getEpisodeNumber(), video.getName(), false, video.getSeasonNumber()));
-                            }
-                        }
-                    }
-                }
-            }*/
         }
+
+        db.close();
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_SEASONS_TABLE = "CREATE TABLE " + TABLE_SEASONS + "("
                 + KEY_SEASON_ID + " INTEGER PRIMARY KEY,"
-                + KEY_SEASON_NUMBER + " INTEGER unique,"
+                + KEY_SEASON_NUMBER + " INTEGER UNIQUE,"
                 + KEY_SEASON_NAME + " TEXT"
                 + ")";
         db.execSQL(CREATE_SEASONS_TABLE);
@@ -84,10 +69,12 @@ public class VideoDbHandler extends SQLiteOpenHelper {
                 + KEY_EPISODE_ID + " INTEGER PRIMARY KEY,"
                 + KEY_EPISODE_NUMBER + " INTEGER,"
                 + KEY_EPISODE_WATCHED + " INTEGER,"
-                + KEY_EPISODE_NAME + " TEXT unique,"
+                + KEY_EPISODE_NAME + " TEXT UNIQUE,"
                 + KEY_EPISODE_FK_SEASON + " INTEGER"
                 + ")";
         db.execSQL(CREATE_EPISODES_TABLE);
+
+        db.close();
     }
 
     @Override
@@ -96,6 +83,8 @@ public class VideoDbHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_EPISODES);
 
         onCreate(db);
+
+        db.close();
     }
 
     public void addSeason(Season season) {
@@ -105,25 +94,9 @@ public class VideoDbHandler extends SQLiteOpenHelper {
         values.put(KEY_SEASON_NUMBER, season.getSeasonNumber());
         values.put(KEY_SEASON_NAME, season.getSeasonName());
 
-        Log.w("video4", "season.getSeasonNumber()=" + season.getSeasonNumber() + ", season.getSeasonName()=" + season.getSeasonName());
-
         db.insertWithOnConflict(TABLE_SEASONS, null, values, SQLiteDatabase.CONFLICT_IGNORE);
 
-        /*public long insertString(String key, String value) {
-            ContentValues initialValues = new ContentValues();
-            initialValues.put(key, value);
-            return db.insertWithOnConflict(DATABASE_TABLE, null, initialValues, SQLiteDatabase.CONFLICT_IGNORE);
-        }
-
-        String sql = "INSERT INTO " + TABLE_SEASONS + "(" + KEY_SEASON_NUMBER + ", " + KEY_SEASON_NAME + ") "
-                + "VALUES (SELECT '" + season.getSeasonNumber() + "', '" + season.getSeasonName() + "' "
-                + "WHERE NOT EXISTS(SELECT 1 FROM " + TABLE_SEASONS + " WHERE " + KEY_SEASON_NUMBER + " = '" + season.getSeasonNumber() + "'))";
-
-        Log.w("video4", "sql=" + sql);
-
-        db.execSQL(sql);*/
-
-        //db.insert(TABLE_SEASONS, null, values);
+        db.close();
     }
 
     public void addEpisode(Episode episode) {
@@ -153,15 +126,51 @@ public class VideoDbHandler extends SQLiteOpenHelper {
                 null,
                 null);
 
+        Season season = null;
+
         if (cursor != null && cursor.moveToFirst()) {
-            return new Season(
+            season = new Season(
                     Integer.parseInt(cursor.getString(0)),
                     Integer.parseInt(cursor.getString(1)),
                     cursor.getString(2)
             );
+            cursor.close();
         }
 
-        return null;
+        db.close();
+
+        return season;
+    }
+
+    public Season getSeasonByNumber(int seasonNumber) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TABLE_SEASONS, new String[]{
+                        KEY_SEASON_ID,
+                        KEY_SEASON_NUMBER,
+                        KEY_SEASON_NAME
+                },
+                KEY_SEASON_NUMBER + "=?",
+                new String[]{String.valueOf(seasonNumber)},
+                null,
+                null,
+                null,
+                null);
+
+        Season season = null;
+
+        if (cursor != null && cursor.moveToFirst()) {
+            season = new Season(
+                    Integer.parseInt(cursor.getString(0)),
+                    Integer.parseInt(cursor.getString(1)),
+                    cursor.getString(2)
+            );
+            cursor.close();
+        }
+
+        db.close();
+
+        return season;
     }
 
     public Episode getEpisode(int id) {
@@ -332,19 +341,27 @@ public class VideoDbHandler extends SQLiteOpenHelper {
         String countQuery = "SELECT  * FROM " + TABLE_SEASONS;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
+        int count = cursor.getCount();
+
+        cursor.close();
+        db.close();
 
         //Log.w("video3", "getSeasonsCount=" + cursor.getCount());
 
-        return cursor.getCount();
+        return count;
     }
 
     public int getEpisodesCount() {
         String countQuery = "SELECT  * FROM " + TABLE_EPISODES;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
+        int count = cursor.getCount();
+
+        cursor.close();
+        db.close();
 
         //Log.w("video3", "getEpisodesCount=" + cursor.getCount());
 
-        return cursor.getCount();
+        return count;
     }
 }

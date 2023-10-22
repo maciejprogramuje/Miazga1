@@ -55,7 +55,6 @@ public class SeasonsActivity extends AppCompatActivity {
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-        //todo
         if (!checkStoragePermissions()) {
             requestForStoragePermissions();
         }
@@ -126,7 +125,6 @@ public class SeasonsActivity extends AppCompatActivity {
                                 }
                             } else {
                                 //Below android 11
-
                             }
                         }
                     });

@@ -7,26 +7,25 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 
 import com.facebook.maciejprogramuje.miazga1.models.Video;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-public class MediaTest {
+public class MediaStoreHelper {
     private final List<Video> videoList = new ArrayList<>();
 
-    public MediaTest(View view) {
-        //todo - konieczne przyznanie uprawnień dla aplikacji
 
-        getVideoList(view);
+    public MediaStoreHelper(View view) {
+        //konieczne przyznanie uprawnień dla aplikacji
+
+        populateVideoList(view);
     }
 
-
-    private void getVideoList(View view) {
+    private void populateVideoList(View view) {
         Uri collection;
         if (SDK_INT >= Build.VERSION_CODES.Q) {
             collection = MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL);
@@ -72,11 +71,10 @@ public class MediaTest {
                 videoList.add(new Video(contentUri, name, duration, size));
             }
         }
-
-        Log.w("video2", "videoList.size()=" + videoList.size());
     }
 
-    public List<Video> getVideoList() {
+    public List<Video> getVideoListSortedBySeasonNumber() {
+        videoList.sort(Comparator.comparing(Video::getSeasonNumber));
         return videoList;
     }
 }

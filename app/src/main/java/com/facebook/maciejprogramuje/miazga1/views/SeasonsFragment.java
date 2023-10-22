@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.facebook.maciejprogramuje.miazga1.MediaTest;
+import com.facebook.maciejprogramuje.miazga1.MediaStoreHelper;
 import com.facebook.maciejprogramuje.miazga1.R;
 import com.facebook.maciejprogramuje.miazga1.commons.SeasonAdapter;
 import com.facebook.maciejprogramuje.miazga1.models.VideoDbHandler;
@@ -32,9 +32,9 @@ public class SeasonsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        MediaTest mediaTest = new MediaTest(view);
+        MediaStoreHelper mediaStoreHelper = new MediaStoreHelper(view);
         miazgaVideoDb = new VideoDbHandler(view.getContext());
-        miazgaVideoDb.fillDatabase(mediaTest.getVideoList());
+        miazgaVideoDb.fillDatabase(mediaStoreHelper.getVideoListSortedBySeasonNumber());
 
         RecyclerView seasonRecyclerView = view.findViewById(R.id.season_recycler_view);
         seasonRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
@@ -43,8 +43,6 @@ public class SeasonsFragment extends Fragment {
                 SeasonsFragment.this);
         seasonRecyclerView.setAdapter(seasonAdapter);
     }
-
-
 
     @Override
     public void onDestroyView() {
