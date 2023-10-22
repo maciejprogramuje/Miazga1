@@ -9,18 +9,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.maciejprogramuje.miazga1.R;
-import com.facebook.maciejprogramuje.miazga1.models.Episode;
-import com.facebook.maciejprogramuje.miazga1.models.MovieDbHandler;
+import com.facebook.maciejprogramuje.miazga1.models.VideoDbHandler;
 import com.facebook.maciejprogramuje.miazga1.views.EpisodesFragment;
-
-import java.util.List;
 
 public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeItemViewHolder> {
     Context context;
     EpisodesFragment episodesFragment;
-    MovieDbHandler db;
+    VideoDbHandler db;
 
-    public EpisodeAdapter(Context context, MovieDbHandler db, EpisodesFragment episodesFragment) {
+    public EpisodeAdapter(Context context, VideoDbHandler db, EpisodesFragment episodesFragment) {
         this.context = context;
         this.db = db;
         this.episodesFragment = episodesFragment;

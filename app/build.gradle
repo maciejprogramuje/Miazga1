@@ -28,6 +28,7 @@ android {
     buildFeatures {
         viewBinding true
     }
+    namespace 'com.facebook.maciejprogramuje.miazga1'
 }
 
 dependencies {

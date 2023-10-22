@@ -14,13 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.facebook.maciejprogramuje.miazga1.R;
 import com.facebook.maciejprogramuje.miazga1.commons.EpisodeAdapter;
 import com.facebook.maciejprogramuje.miazga1.databinding.FragmentEpisodesBinding;
-import com.facebook.maciejprogramuje.miazga1.models.MovieDbHandler;
-
-import java.util.Objects;
+import com.facebook.maciejprogramuje.miazga1.models.VideoDbHandler;
 
 public class EpisodesFragment extends Fragment {
     private FragmentEpisodesBinding binding;
-    private MovieDbHandler dbEpisodesFragment;
+    private VideoDbHandler dbEpisodesFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -31,9 +29,9 @@ public class EpisodesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        dbEpisodesFragment = new MovieDbHandler(view.getContext());
+        dbEpisodesFragment = new VideoDbHandler(view.getContext());
 
-        int seasonPosition = Objects.requireNonNull(getArguments()).getInt("seasonPosition");
+        int seasonPosition = requireArguments().getInt("seasonPosition");
 
         binding.textviewEpisodesOfSeasonNo.setText(String.format("seasonPosition no. %s", seasonPosition));
 

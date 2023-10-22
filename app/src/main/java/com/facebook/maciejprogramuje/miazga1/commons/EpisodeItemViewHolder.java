@@ -8,8 +8,7 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.maciejprogramuje.miazga1.R;
-import com.facebook.maciejprogramuje.miazga1.models.MovieDbHandler;
-import com.facebook.maciejprogramuje.miazga1.views.EpisodesFragment;
+import com.facebook.maciejprogramuje.miazga1.models.VideoDbHandler;
 
 public class EpisodeItemViewHolder extends RecyclerView.ViewHolder {
     TextView episodeNameTextView;
@@ -28,7 +27,7 @@ public class EpisodeItemViewHolder extends RecyclerView.ViewHolder {
 
 
     @SuppressLint("SetTextI18n")
-    public void setEpisodeItem(int position, MovieDbHandler db) {
+    public void setEpisodeItem(int position, VideoDbHandler db) {
         this.position = position;
         episodeNameTextView.setText("Epizod:" + db.getEpisode(position).getEpisodeName());
     }

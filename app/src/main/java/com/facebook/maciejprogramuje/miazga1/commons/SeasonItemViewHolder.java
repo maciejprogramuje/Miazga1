@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.facebook.maciejprogramuje.miazga1.R;
-import com.facebook.maciejprogramuje.miazga1.models.MovieDbHandler;
+import com.facebook.maciejprogramuje.miazga1.models.VideoDbHandler;
 import com.facebook.maciejprogramuje.miazga1.views.SeasonsFragment;
 
 public class SeasonItemViewHolder extends RecyclerView.ViewHolder {
@@ -30,7 +30,7 @@ public class SeasonItemViewHolder extends RecyclerView.ViewHolder {
     }
 
     @SuppressLint("SetTextI18n")
-    public void setSeasonItem(int position, MovieDbHandler db) {
+    public void setSeasonItem(int position, VideoDbHandler db) {
         this.position = position;
         seasonNameTextView.setText("Sezon:" + db.getSeason(position).getSeasonNumber());
     }

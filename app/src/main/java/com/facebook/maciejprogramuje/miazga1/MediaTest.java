@@ -1,34 +1,23 @@
 package com.facebook.maciejprogramuje.miazga1;
 
 import static android.os.Build.VERSION.SDK_INT;
-import static androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale;
-import static androidx.core.content.ContextCompat.startActivity;
-import static java.security.AccessController.getContext;
 
-import android.Manifest;
 import android.content.ContentUris;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 
-import androidx.core.content.ContextCompat;
-
-import com.google.android.material.snackbar.Snackbar;
+import com.facebook.maciejprogramuje.miazga1.models.Video;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class MediaTest {
-    List<Video> videoList = new ArrayList<>();
+    private final List<Video> videoList = new ArrayList<>();
 
     public MediaTest(View view) {
         //todo - konieczne przyznanie uprawnień dla aplikacji
@@ -52,19 +41,21 @@ public class MediaTest {
                 MediaStore.Video.Media.SIZE
         };
 
-        String selection = MediaStore.Video.Media.DURATION + " >= ?";
+        String selection = MediaStore.Video.Media.DISPLAY_NAME + " LIKE ?";
         String[] selectionArgs = new String[]{
-                String.valueOf(TimeUnit.MILLISECONDS.convert(5, TimeUnit.SECONDS))
+                "miazga_%"
         };
 
         String sortOrder = MediaStore.Video.Media.DISPLAY_NAME + " ASC";
 
-        try (Cursor cursor = view.getContext().getApplicationContext().getContentResolver().query(
-                collection,
-                projection,
-                selection,
-                selectionArgs,
-                sortOrder)) {
+        try (
+                Cursor cursor = view.getContext().getApplicationContext().getContentResolver().query(
+                        collection,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        sortOrder)
+        ) {
             int idColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID);
             int nameColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME);
             int durationColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
@@ -82,11 +73,10 @@ public class MediaTest {
             }
         }
 
-
         Log.w("video2", "videoList.size()=" + videoList.size());
+    }
 
-        for (Video v : videoList) {
-            Log.w("video2", v.getName() + ", " + v.getDuration() + ", " + v.getSize());
-        }
+    public List<Video> getVideoList() {
+        return videoList;
     }
 }
