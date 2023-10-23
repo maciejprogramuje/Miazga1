@@ -10,17 +10,20 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.facebook.maciejprogramuje.miazga1.R;
+import com.facebook.maciejprogramuje.miazga1.models.Season;
 import com.facebook.maciejprogramuje.miazga1.models.VideoDbHandler;
 import com.facebook.maciejprogramuje.miazga1.views.SeasonsFragment;
 
+import java.util.List;
+
 public class SeasonAdapter extends RecyclerView.Adapter<SeasonItemViewHolder> {
     Context context;
-    VideoDbHandler db;
+    List<Season> seasons;
     SeasonsFragment seasonsFragment;
 
-    public SeasonAdapter(Context context, VideoDbHandler db, SeasonsFragment seasonsFragment) {
+    public SeasonAdapter(Context context, List<Season> seasons, SeasonsFragment seasonsFragment) {
         this.context = context;
-        this.db = db;
+        this.seasons = seasons;
         this.seasonsFragment = seasonsFragment;
     }
 
@@ -34,11 +37,11 @@ public class SeasonAdapter extends RecyclerView.Adapter<SeasonItemViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull SeasonItemViewHolder seasonItemViewHolder, int position) {
-        seasonItemViewHolder.setSeasonItem(position, db);
+        seasonItemViewHolder.setSeasonItem(position, seasons);
     }
 
     @Override
     public int getItemCount() {
-        return db.getSeasonsCount();
+        return seasons.size();
     }
 }

@@ -9,17 +9,20 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.maciejprogramuje.miazga1.R;
+import com.facebook.maciejprogramuje.miazga1.models.Episode;
 import com.facebook.maciejprogramuje.miazga1.models.VideoDbHandler;
 import com.facebook.maciejprogramuje.miazga1.views.EpisodesFragment;
+
+import java.util.List;
 
 public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeItemViewHolder> {
     Context context;
     EpisodesFragment episodesFragment;
-    VideoDbHandler db;
+    List<Episode> episodes;
 
-    public EpisodeAdapter(Context context, VideoDbHandler db, EpisodesFragment episodesFragment) {
+    public EpisodeAdapter(Context context, List<Episode> episodes, EpisodesFragment episodesFragment) {
         this.context = context;
-        this.db = db;
+        this.episodes = episodes;
         this.episodesFragment = episodesFragment;
     }
 
@@ -32,11 +35,11 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeItemViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull EpisodeItemViewHolder episodeItemViewHolder, int position) {
-        episodeItemViewHolder.setEpisodeItem(position, db);
+        episodeItemViewHolder.setEpisodeItem(position, episodes);
     }
 
     @Override
     public int getItemCount() {
-        return db.getEpisodesCount();
+        return episodes.size();
     }
 }

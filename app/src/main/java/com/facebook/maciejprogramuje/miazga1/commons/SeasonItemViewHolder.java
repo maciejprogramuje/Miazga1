@@ -9,12 +9,16 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.facebook.maciejprogramuje.miazga1.R;
-import com.facebook.maciejprogramuje.miazga1.models.VideoDbHandler;
+import com.facebook.maciejprogramuje.miazga1.models.Season;
 import com.facebook.maciejprogramuje.miazga1.views.SeasonsFragment;
+
+import java.util.List;
 
 public class SeasonItemViewHolder extends RecyclerView.ViewHolder {
     TextView seasonNameTextView;
     int position;
+    int seasonNumber;
+    Season season;
 
     public SeasonItemViewHolder(View itemView, SeasonsFragment seasonsFragment) {
         super(itemView);
@@ -22,7 +26,7 @@ public class SeasonItemViewHolder extends RecyclerView.ViewHolder {
 
         itemView.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
-            bundle.putInt("seasonPosition", position);
+            bundle.putInt("seasonNumber", seasonNumber);
 
             NavHostFragment.findNavController(seasonsFragment)
                     .navigate(R.id.action_SeasonsFragment_to_EpisodesFragment, bundle);
@@ -30,8 +34,14 @@ public class SeasonItemViewHolder extends RecyclerView.ViewHolder {
     }
 
     @SuppressLint("SetTextI18n")
-    public void setSeasonItem(int position, VideoDbHandler db) {
+    public void setSeasonItem(int position, List<Season> seasons) {
         this.position = position;
-        seasonNameTextView.setText("Sezon:" + db.getSeason(position).getSeasonNumber());
+        this.season = seasons.get(position);
+        this.seasonNumber = season.getSeasonNumber();
+
+        seasonNameTextView.setText("Sezon:" + season.getSeasonNumber()
+                + ", " + season.getSeasonName()
+                + ", " + season.getSeasonId()
+        );
     }
 }

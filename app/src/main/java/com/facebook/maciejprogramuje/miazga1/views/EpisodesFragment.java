@@ -1,6 +1,7 @@
 package com.facebook.maciejprogramuje.miazga1.views;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +19,10 @@ import com.facebook.maciejprogramuje.miazga1.models.VideoDbHandler;
 
 public class EpisodesFragment extends Fragment {
     private FragmentEpisodesBinding binding;
-    private VideoDbHandler dbEpisodesFragment;
+    private VideoDbHandler miazgaVideoDb;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentEpisodesBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -29,19 +30,20 @@ public class EpisodesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        dbEpisodesFragment = new VideoDbHandler(view.getContext());
+        miazgaVideoDb = new VideoDbHandler(view.getContext());
 
-        int seasonPosition = requireArguments().getInt("seasonPosition");
+        int seasonNumber = requireArguments().getInt("seasonNumber");
 
-        binding.textviewEpisodesOfSeasonNo.setText(String.format("seasonPosition no. %s", seasonPosition));
+        binding.textviewEpisodesOfSeasonNo.setText(String.format("seasonPosition no. %s", seasonNumber));
 
         binding.buttonSecond.setOnClickListener(view1 -> NavHostFragment.findNavController(EpisodesFragment.this)
                 .navigate(R.id.action_EpisodesFragment_to_SeasonsFragment));
 
         RecyclerView episodesRecyclerView = view.findViewById(R.id.episodes_recycler_view);
         episodesRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        EpisodeAdapter episodeAdapter = new EpisodeAdapter(view.getContext(),
-                dbEpisodesFragment,
+        EpisodeAdapter episodeAdapter = new EpisodeAdapter(
+                view.getContext(),
+                miazgaVideoDb.getAllEpisodesFromSeason(seasonNumber),
                 EpisodesFragment.this);
         episodesRecyclerView.setAdapter(episodeAdapter);
     }
@@ -50,7 +52,7 @@ public class EpisodesFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-        dbEpisodesFragment.close();
+        miazgaVideoDb.close();
     }
 
 }

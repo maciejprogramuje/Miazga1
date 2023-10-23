@@ -7,10 +7,10 @@ public class Episode {
     private int watched;
     private int seasonFK;
 
-    public Episode(int episodeNumber, String episodeName, int watched, int seasonFK) {
+    public Episode(int episodeNumber, String episodeName, int seasonFK) {
         this.episodeNumber = episodeNumber;
         this.episodeName = episodeName;
-        this.watched = watched;
+        this.watched = 0;
         this.seasonFK = seasonFK;
     }
 

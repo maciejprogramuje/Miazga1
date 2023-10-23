@@ -7,12 +7,12 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 
 import com.facebook.maciejprogramuje.miazga1.models.Video;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class MediaStoreHelper {
@@ -73,8 +73,7 @@ public class MediaStoreHelper {
         }
     }
 
-    public List<Video> getVideoListSortedBySeasonNumber() {
-        videoList.sort(Comparator.comparing(Video::getSeasonNumber));
+    public List<Video> getVideos() {
         return videoList;
     }
 }

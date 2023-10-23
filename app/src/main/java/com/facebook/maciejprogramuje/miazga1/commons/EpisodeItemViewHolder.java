@@ -8,11 +8,14 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.maciejprogramuje.miazga1.R;
-import com.facebook.maciejprogramuje.miazga1.models.VideoDbHandler;
+import com.facebook.maciejprogramuje.miazga1.models.Episode;
+
+import java.util.List;
 
 public class EpisodeItemViewHolder extends RecyclerView.ViewHolder {
     TextView episodeNameTextView;
     int position;
+    Episode episode;
 
     public EpisodeItemViewHolder(View itemView) {
         super(itemView);
@@ -27,8 +30,16 @@ public class EpisodeItemViewHolder extends RecyclerView.ViewHolder {
 
 
     @SuppressLint("SetTextI18n")
-    public void setEpisodeItem(int position, VideoDbHandler db) {
+    public void setEpisodeItem(int position, List<Episode> episodes) {
         this.position = position;
-        episodeNameTextView.setText("Epizod:" + db.getEpisode(position).getEpisodeName());
+        this.episode = episodes.get(position);
+
+        episodeNameTextView.setText("Epizod:"
+                + episode.getEpisodeName()
+                + ", " + episode.getEpisodeNumber()
+                + ", " + episode.getEpisodeId()
+                + ", " + episode.getSeasonFK()
+                + ", " + position
+        );
     }
 }
