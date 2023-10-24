@@ -38,8 +38,8 @@ public class Episode {
         this.episodeName = episodeName;
     }
 
-    public int isWatched() {
-        return watched;
+    public boolean isWatched() {
+        return watched == 1;
     }
 
     public void setWatched(int watched) {
@@ -61,4 +61,5 @@ public class Episode {
     public void setEpisodeId(int episodeId) {
         this.episodeId = episodeId;
     }
+
 }

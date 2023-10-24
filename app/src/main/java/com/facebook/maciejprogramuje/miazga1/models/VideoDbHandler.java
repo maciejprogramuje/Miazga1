@@ -14,13 +14,8 @@ import java.util.List;
 
 public class VideoDbHandler extends SQLiteOpenHelper {
     // **********************************************************************
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 5;
     private static final String DATABASE_NAME = "miazgaMoviesDb";
-    // **********************************************************************
-    private static final String TABLE_SEASONS = "seasonsTable";
-    private static final String KEY_SEASON_ID = "id";
-    private static final String KEY_SEASON_NUMBER = "seasonNumber";
-    private static final String KEY_SEASON_NAME = "seasonName";
     // **********************************************************************
     private static final String TABLE_EPISODES = "episodesTable";
     private static final String KEY_EPISODE_ID = "id";
@@ -35,16 +30,11 @@ public class VideoDbHandler extends SQLiteOpenHelper {
     }
 
     public void fillDatabase(List<Video> videos) {
-        deleteDataFromTables();
+        //deleteDataFromTables();
 
         for (Video video : videos) {
-            if (getSeasonByNumber(video.getSeasonNumber()) == null) {
-                Season season = new Season(video.getSeasonNumber(), "Sezon nr." + video.getSeasonNumber());
-                addSeason(season);
-            }
-
             if (getEpisodeByNumbers(video.getEpisodeNumber(), video.getSeasonNumber()) == null) {
-                Episode episode = new Episode(video.getEpisodeNumber(), "Ep." + video.getName(), video.getSeasonNumber());
+                Episode episode = new Episode(video.getEpisodeNumber(), video.getName(), video.getSeasonNumber());
                 addEpisode(episode);
             }
         }
@@ -52,19 +42,11 @@ public class VideoDbHandler extends SQLiteOpenHelper {
 
     private void deleteDataFromTables() {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("delete from " + TABLE_SEASONS);
         db.execSQL("delete from " + TABLE_EPISODES);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_SEASONS_TABLE = "CREATE TABLE " + TABLE_SEASONS + "("
-                + KEY_SEASON_ID + " INTEGER PRIMARY KEY,"
-                + KEY_SEASON_NUMBER + " INTEGER UNIQUE,"
-                + KEY_SEASON_NAME + " TEXT"
-                + ")";
-        db.execSQL(CREATE_SEASONS_TABLE);
-
         String CREATE_EPISODES_TABLE = "CREATE TABLE " + TABLE_EPISODES + "("
                 + KEY_EPISODE_ID + " INTEGER PRIMARY KEY,"
                 + KEY_EPISODE_NUMBER + " INTEGER,"
@@ -79,22 +61,9 @@ public class VideoDbHandler extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SEASONS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_EPISODES);
 
         onCreate(db);
-
-        //db.close();
-    }
-
-    public void addSeason(Season season) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(KEY_SEASON_NUMBER, season.getSeasonNumber());
-        values.put(KEY_SEASON_NAME, season.getSeasonName());
-
-        db.insertWithOnConflict(TABLE_SEASONS, null, values, SQLiteDatabase.CONFLICT_IGNORE);
 
         //db.close();
     }
@@ -111,84 +80,12 @@ public class VideoDbHandler extends SQLiteOpenHelper {
         db.insertWithOnConflict(TABLE_EPISODES, null, values, SQLiteDatabase.CONFLICT_IGNORE);
     }
 
-    public Season getSeason(int id) {
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        Cursor cursor = db.query(TABLE_SEASONS, new String[]{
-                        KEY_SEASON_ID,
-                        KEY_SEASON_NUMBER,
-                        KEY_SEASON_NAME
-                },
-                KEY_SEASON_ID + "=?",
-                new String[]{String.valueOf(id + 1)},
-                null,
-                null,
-                null,
-                null);
-
-        Season season = null;
-
-        if (cursor != null && cursor.moveToFirst()) {
-            season = new Season(
-                    cursor.getInt(0),
-                    cursor.getInt(1),
-                    cursor.getString(2)
-            );
-            cursor.close();
-        }
-
-        //db.close();
-
-        return season;
-    }
-
-    public Season getSeasonByNumber(int seasonNumber) {
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        Cursor cursor = db.query(TABLE_SEASONS, new String[]{
-                        KEY_SEASON_ID,
-                        KEY_SEASON_NUMBER,
-                        KEY_SEASON_NAME
-                },
-                KEY_SEASON_NUMBER + "=?",
-                new String[]{String.valueOf(seasonNumber)},
-                null,
-                null,
-                null,
-                null);
-
-        Season season = null;
-
-        if (cursor != null && cursor.moveToFirst()) {
-            season = new Season(
-                    cursor.getInt(0),
-                    cursor.getInt(1),
-                    cursor.getString(2)
-            );
-            cursor.close();
-        }
-
-        //db.close();
-
-        return season;
-    }
-
     public Episode getEpisode(int id) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        String sql = "SELECT * FROM " + TABLE_EPISODES
+                + " WHERE " + KEY_EPISODE_ID + " = " + (id + 1);
 
-        Cursor cursor = db.query(TABLE_EPISODES, new String[]{
-                        KEY_EPISODE_ID,
-                        KEY_EPISODE_NUMBER,
-                        KEY_EPISODE_NAME,
-                        KEY_EPISODE_WATCHED,
-                        KEY_EPISODE_FK_SEASON
-                },
-                KEY_EPISODE_ID + "=?",
-                new String[]{String.valueOf(id + 1)},
-                null,
-                null,
-                null,
-                null);
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(sql, null);
 
         Episode episode = null;
 
@@ -207,21 +104,12 @@ public class VideoDbHandler extends SQLiteOpenHelper {
     }
 
     public Episode getEpisodeByNumbers(int episodeNumber, int seasonNumber) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        String sql = "SELECT * FROM " + TABLE_EPISODES
+                + " WHERE " + KEY_EPISODE_NUMBER + " = " + episodeNumber
+                + " AND " + KEY_EPISODE_FK_SEASON + " = " + seasonNumber;
 
-        Cursor cursor = db.query(TABLE_EPISODES, new String[]{
-                        KEY_EPISODE_ID,
-                        KEY_EPISODE_NUMBER,
-                        KEY_EPISODE_NAME,
-                        KEY_EPISODE_WATCHED,
-                        KEY_EPISODE_FK_SEASON
-                },
-                KEY_EPISODE_NUMBER + "=? AND " + KEY_EPISODE_FK_SEASON + "=?",
-                new String[]{String.valueOf(episodeNumber), String.valueOf(seasonNumber)},
-                null,
-                null,
-                null,
-                null);
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(sql, null);
 
         Episode episode = null;
 
@@ -239,100 +127,16 @@ public class VideoDbHandler extends SQLiteOpenHelper {
         return episode;
     }
 
-    public List<Season> getAllSeasons() {
-        List<Season> seasons = new ArrayList<>();
+    public void updateEpisodeWatched(int episodeId, boolean watched) {
+        int watchedInt = 0;
+        if (watched) watchedInt = 1;
 
-        String selectQuery = "SELECT * FROM " + TABLE_SEASONS + " ORDER BY " + KEY_SEASON_NUMBER + " ASC";
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                Season season = new Season(
-                        cursor.getInt(0),
-                        cursor.getInt(1),
-                        cursor.getString(2)
-                );
-                seasons.add(season);
-            } while (cursor.moveToNext());
-        }
-
-        cursor.close();
-
-        return seasons;
-    }
-
-    public List<Episode> getAllEpisodes() {
-        List<Episode> episodes = new ArrayList<>();
-
-        String selectQuery = "SELECT * FROM " + TABLE_EPISODES + " ORDER BY " + KEY_EPISODE_FK_SEASON + ", " + KEY_EPISODE_NUMBER + " ASC";
+        String sql = "UPDATE " + TABLE_EPISODES
+                + " SET " + KEY_EPISODE_WATCHED + " = " + watchedInt
+                + " WHERE " + KEY_EPISODE_ID + " = " + episodeId;
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                Episode episode = new Episode(
-                        cursor.getInt(0),
-                        cursor.getInt(1),
-                        cursor.getString(2),
-                        cursor.getInt(3),
-                        cursor.getInt(4)
-                );
-                episodes.add(episode);
-            } while (cursor.moveToNext());
-        }
-
-        //cursor.close();
-
-        return episodes;
-    }
-
-    public int updateSeason(Season season) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(KEY_SEASON_NUMBER, season.getSeasonNumber());
-        values.put(KEY_SEASON_NAME, season.getSeasonName());
-
-        return db.update(TABLE_SEASONS,
-                values,
-                KEY_SEASON_ID + " = ?",
-                new String[]{
-                        String.valueOf(season.getSeasonId())
-                });
-    }
-
-    public int updateEpisode(Episode episode) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(KEY_EPISODE_NUMBER, episode.getEpisodeNumber());
-        values.put(KEY_EPISODE_NAME, episode.getEpisodeName());
-
-        return db.update(TABLE_EPISODES,
-                values,
-                KEY_EPISODE_ID + " = ?",
-                new String[]{
-                        String.valueOf(episode.getEpisodeId())
-                });
-    }
-
-    public void deleteSeason(Season season) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        db.delete(TABLE_SEASONS,
-                KEY_SEASON_ID + " = ?",
-                new String[]{
-                        String.valueOf(season.getSeasonId())
-                });
-
-        db.delete(TABLE_EPISODES,
-                KEY_EPISODE_FK_SEASON + " = ?",
-                new String[]{
-                        String.valueOf(season.getSeasonId())
-                });
+        db.execSQL(sql);
     }
 
     public void deleteEpisode(Episode episode) {
@@ -373,27 +177,28 @@ public class VideoDbHandler extends SQLiteOpenHelper {
         return episodes;
     }
 
-    public int getSeasonsCount() {
-        String countQuery = "SELECT  * FROM " + TABLE_SEASONS;
+    public List<Season> getAllSeasons() {
+        List<Season> seasons = new ArrayList<>();
+
+        String sql = "SELECT DISTINCT " + KEY_EPISODE_FK_SEASON
+                + " FROM " + TABLE_EPISODES
+                + " ORDER BY " + KEY_EPISODE_FK_SEASON + " ASC";
+        ;
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(countQuery, null);
-        int count = cursor.getCount();
+        Cursor cursor = db.rawQuery(sql, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Season s = new Season(
+                        cursor.getInt(0)
+                );
+
+                seasons.add(s);
+            } while (cursor.moveToNext());
+        }
 
         cursor.close();
-        //db.close();
 
-        return count;
-    }
-
-    public int getEpisodesCount() {
-        String countQuery = "SELECT  * FROM " + TABLE_EPISODES;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(countQuery, null);
-        int count = cursor.getCount();
-
-        cursor.close();
-        //db.close();
-
-        return count;
+        return seasons;
     }
 }

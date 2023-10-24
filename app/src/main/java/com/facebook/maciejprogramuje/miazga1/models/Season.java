@@ -6,17 +6,9 @@ import java.util.List;
 public class Season {
     private int seasonId;
     private int seasonNumber;
-    private String seasonName;
 
-    public Season(int seasonNumber, String seasonName) {
+    public Season(int seasonNumber) {
         this.seasonNumber = seasonNumber;
-        this.seasonName = seasonName;
-    }
-
-    public Season(int seasonId, int seasonNumber, String seasonName) {
-        this.seasonId = seasonId;
-        this.seasonNumber = seasonNumber;
-        this.seasonName = seasonName;
     }
 
     public int getSeasonNumber() {
@@ -27,14 +19,6 @@ public class Season {
         this.seasonNumber = seasonNumber;
     }
 
-    public String getSeasonName() {
-        return seasonName;
-    }
-
-    public void setSeasonName(String seasonName) {
-        this.seasonName = seasonName;
-    }
-
     public int getSeasonId() {
         return seasonId;
     }
@@ -42,4 +26,5 @@ public class Season {
     public void setSeasonId(int seasonId) {
         this.seasonId = seasonId;
     }
+
 }

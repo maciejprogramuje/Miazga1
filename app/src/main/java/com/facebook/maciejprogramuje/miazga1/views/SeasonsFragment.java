@@ -37,7 +37,7 @@ public class SeasonsFragment extends Fragment {
         RecyclerView seasonRecyclerView = view.findViewById(R.id.season_recycler_view);
         seasonRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         SeasonAdapter seasonAdapter = new SeasonAdapter(view.getContext(),
-                miazgaVideoDb.getAllSeasons(),
+                miazgaVideoDb,
                 SeasonsFragment.this);
         seasonRecyclerView.setAdapter(seasonAdapter);
     }
