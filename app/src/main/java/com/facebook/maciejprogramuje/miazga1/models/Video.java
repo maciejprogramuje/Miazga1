@@ -1,8 +1,11 @@
 package com.facebook.maciejprogramuje.miazga1.models;
 
+import android.annotation.SuppressLint;
 import android.net.Uri;
+import android.util.Log;
 
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

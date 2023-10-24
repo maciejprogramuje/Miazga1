@@ -6,20 +6,23 @@ public class Episode {
     private String episodeName;
     private int watched;
     private int seasonFK;
+    private int duration;
 
-    public Episode(int episodeNumber, String episodeName, int seasonFK) {
+    public Episode(int episodeNumber, String episodeName, int seasonFK, int duration) {
         this.episodeNumber = episodeNumber;
         this.episodeName = episodeName;
-        this.watched = 0;
         this.seasonFK = seasonFK;
+        this.duration = duration;
+        this.watched = 0;
     }
 
-    public Episode(int episodeId, int episodeNumber, String episodeName, int watched, int seasonFK) {
+    public Episode(int episodeId, int episodeNumber, String episodeName, int watched, int seasonFK, int duration) {
         this.episodeId = episodeId;
         this.episodeNumber = episodeNumber;
         this.episodeName = episodeName;
         this.watched = watched;
         this.seasonFK = seasonFK;
+        this.duration = duration;
     }
 
     public int getEpisodeNumber() {
@@ -62,4 +65,11 @@ public class Episode {
         this.episodeId = episodeId;
     }
 
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
 }

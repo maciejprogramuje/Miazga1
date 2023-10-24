@@ -2,6 +2,7 @@ package com.facebook.maciejprogramuje.miazga1.views;
 
 import android.os.Bundle;
 
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,8 +35,11 @@ public class SeasonsFragment extends Fragment {
         VideoDbHandler miazgaVideoDb = new VideoDbHandler(view.getContext());
         miazgaVideoDb.fillDatabase(mediaStoreHelper.getVideos());
 
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
         RecyclerView seasonRecyclerView = view.findViewById(R.id.season_recycler_view);
-        seasonRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        seasonRecyclerView.setLayoutManager(linearLayoutManager);
+        seasonRecyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(), DividerItemDecoration.VERTICAL));
+
         SeasonAdapter seasonAdapter = new SeasonAdapter(view.getContext(),
                 miazgaVideoDb,
                 SeasonsFragment.this);

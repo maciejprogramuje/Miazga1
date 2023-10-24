@@ -1,12 +1,10 @@
 <resources>
     <string name="app_name">Miazga1</string>
-    <string name="title_activity_seasons">SeasonsActivity</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="seasons_fragment_label">Seasons Fragment</string>
-    <string name="episodes_fragment_label">Episodes Fragment</string>
+    <string name="title_activity_seasons">Miazga Planer</string>
+
+    <string name="seasons_fragment_label">Lista sezonów</string>
+    <string name="episodes_fragment_label">Lista odcinków</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
-    <string name="hello_seasons_fragment">Hello seasons fragment</string>
-    <string name="hello_episodes_fragment">Hello episodes fragment. Arg: %1$s</string>
 </resources>

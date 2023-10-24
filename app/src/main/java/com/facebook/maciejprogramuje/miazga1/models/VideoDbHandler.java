@@ -14,7 +14,7 @@ import java.util.List;
 
 public class VideoDbHandler extends SQLiteOpenHelper {
     // **********************************************************************
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 8;
     private static final String DATABASE_NAME = "miazgaMoviesDb";
     // **********************************************************************
     private static final String TABLE_EPISODES = "episodesTable";
@@ -23,6 +23,7 @@ public class VideoDbHandler extends SQLiteOpenHelper {
     private static final String KEY_EPISODE_NAME = "episodeName";
     private static final String KEY_EPISODE_WATCHED = "watched";
     private static final String KEY_EPISODE_FK_SEASON = "seasonFK";
+    private static final String KEY_EPISODE_DURATION = "duration";
     // **********************************************************************
 
     public VideoDbHandler(@Nullable Context context) {
@@ -33,11 +34,37 @@ public class VideoDbHandler extends SQLiteOpenHelper {
         //deleteDataFromTables();
 
         for (Video video : videos) {
-            if (getEpisodeByNumbers(video.getEpisodeNumber(), video.getSeasonNumber()) == null) {
-                Episode episode = new Episode(video.getEpisodeNumber(), video.getName(), video.getSeasonNumber());
-                addEpisode(episode);
-            }
+            Episode episode = new Episode(
+                    video.getEpisodeNumber(),
+                    video.getName(),
+                    video.getSeasonNumber(),
+                    video.getDuration()
+            );
+
+            addEpisode(episode);
         }
+    }
+
+    public void getAllEpisodes() {
+        String selectQuery = "SELECT * FROM " + TABLE_EPISODES;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Log.w("video1",
+                        "KEY_EPISODE_ID=" + cursor.getInt(0)
+                                + ", KEY_EPISODE_NUMBER=" + cursor.getInt(1)
+                                + ", KEY_EPISODE_NAME=" + cursor.getString(2)
+                                + ", KEY_EPISODE_WATCHED=" + cursor.getInt(3)
+                                + ", KEY_EPISODE_FK_SEASON=" + cursor.getInt(4)
+                                + ", KEY_EPISODE_DURATION=" + cursor.getInt(5)
+                );
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
     }
 
     private void deleteDataFromTables() {
@@ -52,7 +79,8 @@ public class VideoDbHandler extends SQLiteOpenHelper {
                 + KEY_EPISODE_NUMBER + " INTEGER,"
                 + KEY_EPISODE_NAME + " TEXT UNIQUE,"
                 + KEY_EPISODE_WATCHED + " INTEGER,"
-                + KEY_EPISODE_FK_SEASON + " INTEGER"
+                + KEY_EPISODE_FK_SEASON + " INTEGER,"
+                + KEY_EPISODE_DURATION + " INTEGER"
                 + ")";
         db.execSQL(CREATE_EPISODES_TABLE);
 
@@ -76,6 +104,7 @@ public class VideoDbHandler extends SQLiteOpenHelper {
         values.put(KEY_EPISODE_NAME, episode.getEpisodeName());
         values.put(KEY_EPISODE_WATCHED, episode.isWatched());
         values.put(KEY_EPISODE_FK_SEASON, episode.getSeasonFK());
+        values.put(KEY_EPISODE_DURATION, episode.getDuration());
 
         db.insertWithOnConflict(TABLE_EPISODES, null, values, SQLiteDatabase.CONFLICT_IGNORE);
     }
@@ -95,7 +124,8 @@ public class VideoDbHandler extends SQLiteOpenHelper {
                     cursor.getInt(1),
                     cursor.getString(2),
                     cursor.getInt(3),
-                    cursor.getInt(4)
+                    cursor.getInt(4),
+                    cursor.getInt(5)
             );
             cursor.close();
         }
@@ -119,7 +149,8 @@ public class VideoDbHandler extends SQLiteOpenHelper {
                     cursor.getInt(1),
                     cursor.getString(2),
                     cursor.getInt(3),
-                    cursor.getInt(4)
+                    cursor.getInt(4),
+                    cursor.getInt(5)
             );
             cursor.close();
         }
@@ -166,7 +197,8 @@ public class VideoDbHandler extends SQLiteOpenHelper {
                         cursor.getInt(1),
                         cursor.getString(2),
                         cursor.getInt(3),
-                        cursor.getInt(4)
+                        cursor.getInt(4),
+                        cursor.getInt(5)
                 );
                 episodes.add(episode);
             } while (cursor.moveToNext());
