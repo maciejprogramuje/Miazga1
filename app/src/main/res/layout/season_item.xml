@@ -14,6 +14,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:text="Sezon"
+        android:textColor="@color/primary_text_color"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -27,6 +28,7 @@
         android:layout_marginTop="8dp"
         android:text="number of episodes"
         android:textSize="16sp"
+        android:textColor="@color/secondary_text_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/season_first_line_textview" />
@@ -40,6 +42,7 @@
         android:layout_marginBottom="8dp"
         android:text="obejrzanych:"
         android:textSize="16sp"
+        android:textColor="@color/secondary_text_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/season_second_line_textview" />
@@ -53,6 +56,7 @@
         android:layout_marginBottom="8dp"
         android:text="nieobejrzanych:"
         android:textSize="16sp"
+        android:textColor="@color/secondary_text_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/season_second_line_textview" />

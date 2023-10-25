@@ -32,8 +32,9 @@ public class SeasonsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         MediaStoreHelper mediaStoreHelper = new MediaStoreHelper(view);
-        VideoDbHandler miazgaVideoDb = new VideoDbHandler(view.getContext());
-        miazgaVideoDb.fillDatabase(mediaStoreHelper.getVideos());
+        try (VideoDbHandler miazgaVideoDb = new VideoDbHandler(view.getContext())) {
+            miazgaVideoDb.fillDatabase(mediaStoreHelper.getVideos());
+        }
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
         RecyclerView seasonRecyclerView = view.findViewById(R.id.season_recycler_view);
@@ -50,4 +51,5 @@ public class SeasonsFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
 }

@@ -35,9 +35,6 @@ public class EpisodesFragment extends Fragment {
 
         int seasonNumber = requireArguments().getInt("seasonNumber");
 
-        binding.buttonSecond.setOnClickListener(view1 -> NavHostFragment.findNavController(EpisodesFragment.this)
-                .navigate(R.id.action_EpisodesFragment_to_SeasonsFragment));
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
         RecyclerView episodesRecyclerView = view.findViewById(R.id.episodes_recycler_view);
         episodesRecyclerView.setLayoutManager(linearLayoutManager);

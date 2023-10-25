@@ -1,10 +1,8 @@
 <resources>
-    <string name="app_name">Miazga1</string>
-    <string name="title_activity_seasons">Miazga Planer</string>
+    <string name="app_name">MiazgaPlanner</string>
+    <string name="title_activity_seasons">Miazga Planner</string>
 
     <string name="seasons_fragment_label">Lista sezonów</string>
     <string name="episodes_fragment_label">Lista odcinków</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
 
 </resources>

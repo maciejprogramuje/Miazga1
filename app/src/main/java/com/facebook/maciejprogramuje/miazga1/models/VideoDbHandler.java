@@ -67,7 +67,7 @@ public class VideoDbHandler extends SQLiteOpenHelper {
         cursor.close();
     }
 
-    private void deleteDataFromTables() {
+    public void deleteDataFromTables() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from " + TABLE_EPISODES);
     }
