@@ -1,6 +1,7 @@
 package com.facebook.maciejprogramuje.miazga1.commons;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,17 +14,21 @@ import com.facebook.maciejprogramuje.miazga1.models.Episode;
 import com.facebook.maciejprogramuje.miazga1.models.VideoDbHandler;
 import com.facebook.maciejprogramuje.miazga1.views.EpisodesFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeItemViewHolder> {
+    private final VideoDbHandler miazgaVideoDb;
     Context context;
+    private final int seasonNumber;
     EpisodesFragment episodesFragment;
-    List<Episode> episodes;
 
-    public EpisodeAdapter(Context context, List<Episode> episodes, EpisodesFragment episodesFragment) {
+    public EpisodeAdapter(Context context, int seasonNumber, EpisodesFragment episodesFragment) {
         this.context = context;
-        this.episodes = episodes;
+        this.seasonNumber = seasonNumber;
         this.episodesFragment = episodesFragment;
+        this.miazgaVideoDb = new VideoDbHandler(context);
+
     }
 
     @NonNull
@@ -35,11 +40,17 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeItemViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull EpisodeItemViewHolder episodeItemViewHolder, int position) {
-        episodeItemViewHolder.setEpisodeItem(position, episodes);
+        episodeItemViewHolder.setEpisodeItem(position, seasonNumber);
     }
 
     @Override
     public int getItemCount() {
-        return episodes.size();
+        return miazgaVideoDb.getAllEpisodesFromSeason(seasonNumber).size();
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull EpisodeItemViewHolder holder) {
+        holder.watchedCheckbox.setOnCheckedChangeListener(null);
+        super.onViewRecycled(holder);
     }
 }

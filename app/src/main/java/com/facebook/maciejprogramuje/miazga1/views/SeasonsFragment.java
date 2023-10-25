@@ -41,7 +41,6 @@ public class SeasonsFragment extends Fragment {
         seasonRecyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(), DividerItemDecoration.VERTICAL));
 
         SeasonAdapter seasonAdapter = new SeasonAdapter(view.getContext(),
-                miazgaVideoDb,
                 SeasonsFragment.this);
         seasonRecyclerView.setAdapter(seasonAdapter);
     }

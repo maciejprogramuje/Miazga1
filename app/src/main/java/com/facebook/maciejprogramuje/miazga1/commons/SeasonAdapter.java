@@ -18,12 +18,10 @@ import java.util.List;
 
 public class SeasonAdapter extends RecyclerView.Adapter<SeasonItemViewHolder> {
     Context context;
-    private final VideoDbHandler miazgaVideoDb;
     SeasonsFragment seasonsFragment;
 
-    public SeasonAdapter(Context context, VideoDbHandler miazgaVideoDb, SeasonsFragment seasonsFragment) {
+    public SeasonAdapter(Context context, SeasonsFragment seasonsFragment) {
         this.context = context;
-        this.miazgaVideoDb = miazgaVideoDb;
         this.seasonsFragment = seasonsFragment;
     }
 
@@ -37,14 +35,13 @@ public class SeasonAdapter extends RecyclerView.Adapter<SeasonItemViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull SeasonItemViewHolder seasonItemViewHolder, int position) {
-        seasonItemViewHolder.setSeasonItem(
-                miazgaVideoDb.getAllSeasons().get(position),
-                miazgaVideoDb.getAllEpisodesFromSeason(miazgaVideoDb.getAllSeasons().get(position).getSeasonNumber())
-        );
+        seasonItemViewHolder.setSeasonItem(position);
     }
 
     @Override
     public int getItemCount() {
-        return miazgaVideoDb.getAllSeasons().size();
+        try (VideoDbHandler miazgaVideoDb = new VideoDbHandler(context)) {
+            return miazgaVideoDb.getAllSeasons().size();
+        }
     }
 }

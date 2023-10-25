@@ -16,11 +16,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.facebook.maciejprogramuje.miazga1.R;
 import com.facebook.maciejprogramuje.miazga1.commons.EpisodeAdapter;
 import com.facebook.maciejprogramuje.miazga1.databinding.FragmentEpisodesBinding;
+import com.facebook.maciejprogramuje.miazga1.models.Episode;
 import com.facebook.maciejprogramuje.miazga1.models.VideoDbHandler;
+
+import java.util.List;
 
 public class EpisodesFragment extends Fragment {
     private FragmentEpisodesBinding binding;
-    private VideoDbHandler miazgaVideoDb;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -30,8 +32,6 @@ public class EpisodesFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        miazgaVideoDb = new VideoDbHandler(view.getContext());
 
         int seasonNumber = requireArguments().getInt("seasonNumber");
 
@@ -45,7 +45,7 @@ public class EpisodesFragment extends Fragment {
 
         EpisodeAdapter episodeAdapter = new EpisodeAdapter(
                 view.getContext(),
-                miazgaVideoDb.getAllEpisodesFromSeason(seasonNumber),
+                seasonNumber,
                 EpisodesFragment.this);
         episodesRecyclerView.setAdapter(episodeAdapter);
     }
@@ -54,7 +54,6 @@ public class EpisodesFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-        miazgaVideoDb.close();
     }
 
 }

@@ -233,4 +233,14 @@ public class VideoDbHandler extends SQLiteOpenHelper {
 
         return seasons;
     }
+
+    public int getWatched(List<Episode> episodesInSeason) {
+        int watched = 0;
+        for (Episode e : episodesInSeason) {
+            if (e.isWatched()) {
+                watched++;
+            }
+        }
+        return watched;
+    }
 }
