@@ -7,16 +7,16 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 
-import com.facebook.maciejprogramuje.miazga1.models.Video;
+import com.facebook.maciejprogramuje.miazga1.models.Episode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MediaStoreHelper {
-    private final List<Video> videoList = new ArrayList<>();
+    private final List<Episode> episodeList = new ArrayList<>();
 
 
     public MediaStoreHelper(View view) {
@@ -55,7 +55,7 @@ public class MediaStoreHelper {
                         selectionArgs,
                         sortOrder)
         ) {
-            int idColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID);
+            int idColumn = Objects.requireNonNull(cursor).getColumnIndexOrThrow(MediaStore.Video.Media._ID);
             int nameColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME);
             int durationColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
             int sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE);
@@ -68,12 +68,12 @@ public class MediaStoreHelper {
 
                 Uri contentUri = ContentUris.withAppendedId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, id);
 
-                videoList.add(new Video(contentUri, name, duration, size));
+                episodeList.add(new Episode(contentUri, name, duration, size));
             }
         }
     }
 
-    public List<Video> getVideos() {
-        return videoList;
+    public List<Episode> getVideos() {
+        return episodeList;
     }
 }

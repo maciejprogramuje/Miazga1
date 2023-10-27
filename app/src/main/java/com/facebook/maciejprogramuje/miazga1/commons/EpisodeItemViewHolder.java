@@ -1,11 +1,13 @@
 package com.facebook.maciejprogramuje.miazga1.commons;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
+import android.net.Uri;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +23,7 @@ public class EpisodeItemViewHolder extends RecyclerView.ViewHolder {
     TextView episodeNameTextView;
     TextView episodeNumberTextView;
     CheckBox watchedCheckbox;
+    Uri videoPathUri;
 
     public EpisodeItemViewHolder(View itemView) {
         super(itemView);
@@ -34,7 +37,20 @@ public class EpisodeItemViewHolder extends RecyclerView.ViewHolder {
             String episodeNumber = episodePropertiesTextView.getText().toString();
 
             Toast.makeText(view.getContext(), "Clicked episode no." + episodeNumber, Toast.LENGTH_SHORT).show();
+
+            playMovie(view);
         });
+    }
+
+    private void playMovie(View view) {
+        VideoView videoView = (VideoView) view.getRootView().findViewById(R.id.video_view);
+        MediaController mc = new MediaController(view.getContext());
+        mc.setAnchorView(videoView);
+        mc.setMediaPlayer(videoView);
+        videoView.setMediaController(mc);
+        videoView.setVideoURI(videoPathUri);
+
+        videoView.start();
     }
 
     @SuppressLint("SetTextI18n")
@@ -44,12 +60,15 @@ public class EpisodeItemViewHolder extends RecyclerView.ViewHolder {
             List<Episode> allEpisodesFromSeason = miazgaVideoDb.getAllEpisodesFromSeason(seasonNumber);
             Episode episode = allEpisodesFromSeason.get(position);
 
+            videoPathUri = episode.getUri();
+
             episodeNumberTextView.setText("Odcinek " + episode.getEpisodeNumber());
-            episodeNameTextView.setText(episode.getEpisodeName());
-            episodePropertiesTextView.setText("Sezon: " + episode.getSeasonFK()
+            episodeNameTextView.setText(episode.getName());
+            episodePropertiesTextView.setText("Sezon: " + episode.getSeasonNumber()
                     + ", czas: " + millsecondsToMins(episode.getDuration())
             );
-            watchedCheckbox.setChecked(episode.isWatched());
+
+            watchedCheckbox.setChecked(episode.getWatched() == 1);
 
             watchedCheckbox.setOnCheckedChangeListener((checkbox, isChecked) -> {
                 miazgaVideoDb.updateEpisodeWatched(episode.getEpisodeId(), isChecked);

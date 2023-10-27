@@ -1,25 +1,16 @@
 package com.facebook.maciejprogramuje.miazga1;
 
-import static android.os.Build.VERSION.SDK_INT;
-
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.Instrumentation;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
@@ -36,14 +27,10 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.facebook.maciejprogramuje.miazga1.R;
 import com.facebook.maciejprogramuje.miazga1.databinding.ActivitySeasonBinding;
-import com.facebook.maciejprogramuje.miazga1.models.VideoDbHandler;
-import com.google.android.material.snackbar.Snackbar;
 
 public class SeasonsActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
-    private ActivitySeasonBinding binding;
 
     private static final int STORAGE_PERMISSION_CODE = 23;
 
@@ -51,7 +38,7 @@ public class SeasonsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivitySeasonBinding.inflate(getLayoutInflater());
+        com.facebook.maciejprogramuje.miazga1.databinding.ActivitySeasonBinding binding = ActivitySeasonBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.toolbar);
