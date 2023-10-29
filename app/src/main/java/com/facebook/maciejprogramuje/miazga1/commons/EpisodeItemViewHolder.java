@@ -31,9 +31,7 @@ public class EpisodeItemViewHolder extends RecyclerView.ViewHolder {
     TextView episodeNameTextView;
     TextView episodeNumberTextView;
     CheckBox watchedCheckbox;
-    Uri videoPathUri;
-    VideoView videoView;
-    int episodeNumber;
+    String videoPathString;
 
     public EpisodeItemViewHolder(View itemView, EpisodesFragment episodesFragment) {
         super(itemView);
@@ -45,29 +43,11 @@ public class EpisodeItemViewHolder extends RecyclerView.ViewHolder {
 
         itemView.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
-            bundle.putInt("episodeNumber", episodeNumber);
+            bundle.putString("videoPathString", videoPathString);
 
             NavHostFragment.findNavController(episodesFragment)
                     .navigate(R.id.action_EpisodesFragment_to_MovieFragment, bundle);
-
-            //playMovie(view);
         });
-    }
-
-    private void playMovie(View view) {
-        videoView = (VideoView) view.getRootView().findViewById(R.id.video_view);
-        MediaController mc = new MediaController(view.getContext());
-        mc.setAnchorView(videoView);
-        mc.setMediaPlayer(videoView);
-        videoView.setMediaController(mc);
-        videoView.setVideoURI(videoPathUri);
-
-        videoView.setVisibility(View.VISIBLE);
-
-        RecyclerView episodesRecyclerView = (RecyclerView) view.getRootView().findViewById(R.id.episodes_recycler_view);
-        episodesRecyclerView.setVisibility(View.INVISIBLE);
-
-        videoView.start();
     }
 
     @SuppressLint("SetTextI18n")
@@ -77,10 +57,7 @@ public class EpisodeItemViewHolder extends RecyclerView.ViewHolder {
             List<Episode> allEpisodesFromSeason = miazgaVideoDb.getAllEpisodesFromSeason(seasonNumber);
             Episode episode = allEpisodesFromSeason.get(position);
 
-            episodeNumber = episode.getEpisodeNumber();
-
-
-            videoPathUri = episode.getUri();
+            videoPathString = episode.getUri().toString();
 
             episodeNumberTextView.setText("Odcinek " + episode.getEpisodeNumber());
             episodeNameTextView.setText(episode.getName());

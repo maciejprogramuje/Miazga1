@@ -26,7 +26,7 @@
             android:name=".SeasonsActivity"
             android:exported="true"
             android:label="@string/title_activity_seasons"
-            android:theme="@style/Theme.Miazga1.NoActionBar">
+            android:theme="@style/Theme.Miazga1.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

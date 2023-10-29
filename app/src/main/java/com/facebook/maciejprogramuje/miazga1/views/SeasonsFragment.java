@@ -1,5 +1,6 @@
 package com.facebook.maciejprogramuje.miazga1.views;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -51,5 +52,4 @@ public class SeasonsFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
 }
