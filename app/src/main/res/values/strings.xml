@@ -4,5 +4,8 @@
 
     <string name="seasons_fragment_label">Lista sezonów</string>
     <string name="episodes_fragment_label">Lista odcinków</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="play_episode_label">Odcinek</string>
 
 </resources>

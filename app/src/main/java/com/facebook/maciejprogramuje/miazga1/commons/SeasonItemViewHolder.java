@@ -25,6 +25,7 @@ public class SeasonItemViewHolder extends RecyclerView.ViewHolder {
 
     public SeasonItemViewHolder(View itemView, SeasonsFragment seasonsFragment) {
         super(itemView);
+
         seasonFirstLineTextView = itemView.findViewById(R.id.season_first_line_textview);
         seasonSecondLineTextView = itemView.findViewById(R.id.season_second_line_textview);
         seasonWatchedLineTextView = itemView.findViewById(R.id.episode_watched_textview);
@@ -44,8 +45,8 @@ public class SeasonItemViewHolder extends RecyclerView.ViewHolder {
         Season season;
         List<Episode> episodesInSeason;
         int watched;
-        try (VideoDbHandler miazgaVideoDb = new VideoDbHandler(itemView.getContext())) {
 
+        try (VideoDbHandler miazgaVideoDb = new VideoDbHandler(itemView.getContext())) {
             season = miazgaVideoDb.getAllSeasons().get(position);
             episodesInSeason = miazgaVideoDb.getAllEpisodesFromSeason(miazgaVideoDb.getAllSeasons().get(position).getSeasonNumber());
             watched = miazgaVideoDb.getNumberOfWatched(episodesInSeason);

@@ -24,5 +24,18 @@
         <action
             android:id="@+id/action_EpisodesFragment_to_SeasonsFragment"
             app:destination="@id/SeasonsFragment" />
+        <action
+            android:id="@+id/action_EpisodesFragment_to_MovieFragment"
+            app:destination="@id/MovieFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/MovieFragment"
+        android:name="com.facebook.maciejprogramuje.miazga1.views.MovieFragment"
+        android:label="@string/play_episode_label"
+        tools:layout="@layout/fragment_episodes" >
+
+        <action
+            android:id="@+id/action_MovieFragment_to_EpisodesFragment"
+            app:destination="@id/EpisodesFragment" />
     </fragment>
 </navigation>

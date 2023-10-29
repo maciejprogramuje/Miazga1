@@ -30,7 +30,8 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeItemViewHolder> 
     @Override
     public EpisodeItemViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.episode_item, viewGroup, false);
-        return new EpisodeItemViewHolder(view);
+
+        return new EpisodeItemViewHolder(view, episodesFragment);
     }
 
     @Override
