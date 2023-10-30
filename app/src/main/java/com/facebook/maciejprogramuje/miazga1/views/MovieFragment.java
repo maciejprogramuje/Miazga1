@@ -29,9 +29,14 @@ import com.facebook.maciejprogramuje.miazga1.databinding.FragmentMovieBinding;
 public class MovieFragment extends Fragment {
     private FragmentMovieBinding binding;
 
+    private int currentPositionOfMovie;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMovieBinding.inflate(inflater, container, false);
+
+        currentPositionOfMovie = -1;
+
         return binding.getRoot();
     }
 
@@ -39,6 +44,7 @@ public class MovieFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         Uri videoPathUri = Uri.parse(requireArguments().getString("videoPathString"));
+        currentPositionOfMovie = requireArguments().getInt("currentPositionOfMovie");
 
         MediaController mc = new MediaController(getActivity());
         mc.setAnchorView(binding.videoView);
@@ -54,13 +60,29 @@ public class MovieFragment extends Fragment {
             binding.videoView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
         }
 
+        if (currentPositionOfMovie != -1) {
+            binding.videoView.seekTo(currentPositionOfMovie);
+        }
+
         binding.videoView.start();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
+        currentPositionOfMovie = binding.videoView.getCurrentPosition();
+
+        Bundle bundle = new Bundle();
+        bundle.putInt("currentPositionOfMovie", currentPositionOfMovie);
+
         binding = null;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        currentPositionOfMovie = binding.videoView.getCurrentPosition();
+    }
 }
