@@ -71,6 +71,7 @@ public class MovieFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
 
+        binding.videoView.pause();
         currentPositionOfMovie = binding.videoView.getCurrentPosition();
 
         Bundle bundle = new Bundle();
@@ -83,6 +84,10 @@ public class MovieFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
+        binding.videoView.pause();
         currentPositionOfMovie = binding.videoView.getCurrentPosition();
+
+        Bundle bundle = new Bundle();
+        bundle.putInt("currentPositionOfMovie", currentPositionOfMovie);
     }
 }
