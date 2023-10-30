@@ -2,6 +2,7 @@ package com.facebook.maciejprogramuje.miazga1.views;
 
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -27,11 +28,13 @@ import com.facebook.maciejprogramuje.miazga1.R;
 import com.facebook.maciejprogramuje.miazga1.commons.EpisodeAdapter;
 import com.facebook.maciejprogramuje.miazga1.databinding.FragmentEpisodesBinding;
 import com.facebook.maciejprogramuje.miazga1.databinding.FragmentMovieBinding;
+import com.facebook.maciejprogramuje.miazga1.models.VideoDbHandler;
 
 public class MovieFragment extends Fragment {
     private FragmentMovieBinding binding;
-
-    //private int currentPositionOfMovie;
+    Uri videoPathUri;
+    int episodeId;
+    private int currentPositionOfMovie;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,13 +45,18 @@ public class MovieFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Uri videoPathUri = Uri.parse(requireArguments().getString("videoPathString"));
+        videoPathUri = Uri.parse(requireArguments().getString("videoPathString"));
+        episodeId = requireArguments().getInt("episodeId");
 
         MediaController mc = new MediaController(getActivity());
         mc.setAnchorView(binding.videoView);
         mc.setMediaPlayer(binding.videoView);
         binding.videoView.setMediaController(mc);
         binding.videoView.setVideoURI(videoPathUri);
+
+        binding.videoView.setOnCompletionListener(mediaPlayer -> {
+            new VideoDbHandler(view.getContext()).updateEpisodeWatched(episodeId, true);
+        });
 
         binding.videoView.start();
     }
@@ -67,6 +75,21 @@ public class MovieFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
         binding = null;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        currentPositionOfMovie = binding.videoView.getCurrentPosition();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        binding.videoView.seekTo(currentPositionOfMovie);
     }
 }

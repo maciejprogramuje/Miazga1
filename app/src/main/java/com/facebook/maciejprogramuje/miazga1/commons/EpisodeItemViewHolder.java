@@ -32,6 +32,7 @@ public class EpisodeItemViewHolder extends RecyclerView.ViewHolder {
     TextView episodeNumberTextView;
     CheckBox watchedCheckbox;
     String videoPathString;
+    int episodeId;
 
     public EpisodeItemViewHolder(View itemView, EpisodesFragment episodesFragment) {
         super(itemView);
@@ -44,6 +45,7 @@ public class EpisodeItemViewHolder extends RecyclerView.ViewHolder {
         itemView.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
             bundle.putString("videoPathString", videoPathString);
+            bundle.putInt("episodeId", episodeId);
 
             NavHostFragment.findNavController(episodesFragment)
                     .navigate(R.id.action_EpisodesFragment_to_MovieFragment, bundle);
@@ -58,6 +60,7 @@ public class EpisodeItemViewHolder extends RecyclerView.ViewHolder {
             Episode episode = allEpisodesFromSeason.get(position);
 
             videoPathString = episode.getUri().toString();
+            episodeId = episode.getEpisodeId();
 
             episodeNumberTextView.setText("Odcinek " + episode.getEpisodeNumber());
             episodeNameTextView.setText(episode.getName());
@@ -80,8 +83,4 @@ public class EpisodeItemViewHolder extends RecyclerView.ViewHolder {
                 + (TimeUnit.MILLISECONDS.toSeconds(milliseconds) % 60) + " sec";
     }
 
-    private int sizeDpToPixels(Context c, int sizeInDp) {
-        final float scale = c.getResources().getDisplayMetrics().density;
-        return (int) (sizeInDp * scale + 0.5f);
-    }
 }
