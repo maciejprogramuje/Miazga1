@@ -1,24 +1,21 @@
 package com.facebook.maciejprogramuje.miazga1.views;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
-
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.maciejprogramuje.miazga1.MediaStoreHelper;
 import com.facebook.maciejprogramuje.miazga1.R;
 import com.facebook.maciejprogramuje.miazga1.commons.SeasonAdapter;
-import com.facebook.maciejprogramuje.miazga1.models.VideoDbHandler;
 import com.facebook.maciejprogramuje.miazga1.databinding.FragmentSeasonsBinding;
+import com.facebook.maciejprogramuje.miazga1.models.VideoDbHandler;
 
 public class SeasonsFragment extends Fragment {
     private FragmentSeasonsBinding binding;

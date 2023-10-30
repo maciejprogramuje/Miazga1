@@ -4,13 +4,20 @@ import static android.os.Build.VERSION.SDK_INT;
 
 import android.content.ContentUris;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.util.Log;
+import android.util.Size;
 import android.view.View;
 
 import com.facebook.maciejprogramuje.miazga1.models.Episode;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -37,7 +44,7 @@ public class MediaStoreHelper {
                 MediaStore.Video.Media._ID,
                 MediaStore.Video.Media.DISPLAY_NAME,
                 MediaStore.Video.Media.DURATION,
-                MediaStore.Video.Media.SIZE
+                MediaStore.Video.Media.SIZE,
         };
 
         String selection = MediaStore.Video.Media.DISPLAY_NAME + " LIKE ?";

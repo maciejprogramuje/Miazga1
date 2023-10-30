@@ -1,17 +1,17 @@
 package com.facebook.maciejprogramuje.miazga1.commons;
 
 import android.content.Context;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.facebook.maciejprogramuje.miazga1.R;
 import com.facebook.maciejprogramuje.miazga1.models.VideoDbHandler;
 import com.facebook.maciejprogramuje.miazga1.views.SeasonsFragment;
+
 ;
 
 public class SeasonAdapter extends RecyclerView.Adapter<SeasonItemViewHolder> {

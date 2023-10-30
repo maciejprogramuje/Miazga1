@@ -1,8 +1,5 @@
 package com.facebook.maciejprogramuje.miazga1.models;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Season {
     private int seasonId;
     private int seasonNumber;

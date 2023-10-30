@@ -1,12 +1,12 @@
 package com.facebook.maciejprogramuje.miazga1.commons;
 
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.maciejprogramuje.miazga1.R;
 import com.facebook.maciejprogramuje.miazga1.models.Episode;

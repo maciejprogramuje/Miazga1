@@ -1,32 +1,17 @@
 package com.facebook.maciejprogramuje.miazga1.views;
 
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
-import android.widget.RelativeLayout;
-import android.widget.VideoView;
 
-import com.facebook.maciejprogramuje.miazga1.R;
-import com.facebook.maciejprogramuje.miazga1.commons.EpisodeAdapter;
-import com.facebook.maciejprogramuje.miazga1.databinding.FragmentEpisodesBinding;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
 import com.facebook.maciejprogramuje.miazga1.databinding.FragmentMovieBinding;
 import com.facebook.maciejprogramuje.miazga1.models.VideoDbHandler;
 

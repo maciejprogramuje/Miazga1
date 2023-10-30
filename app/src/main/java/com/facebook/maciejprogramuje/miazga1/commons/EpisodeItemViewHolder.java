@@ -1,19 +1,13 @@
 package com.facebook.maciejprogramuje.miazga1.commons;
 
-import static java.security.AccessController.getContext;
-
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.pm.ActivityInfo;
-import android.net.Uri;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Size;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.MediaController;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.VideoView;
 
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,6 +25,7 @@ public class EpisodeItemViewHolder extends RecyclerView.ViewHolder {
     TextView episodeNameTextView;
     TextView episodeNumberTextView;
     CheckBox watchedCheckbox;
+    ImageView thumbnailImageView;
     String videoPathString;
     int episodeId;
 
@@ -41,6 +36,7 @@ public class EpisodeItemViewHolder extends RecyclerView.ViewHolder {
         episodeNameTextView = itemView.findViewById(R.id.episode_name_text_view);
         episodePropertiesTextView = itemView.findViewById(R.id.episode_properties_text_view);
         watchedCheckbox = itemView.findViewById(R.id.watched_checkbox);
+        thumbnailImageView = itemView.findViewById(R.id.thumbnail_image_view);
 
         itemView.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
@@ -62,6 +58,12 @@ public class EpisodeItemViewHolder extends RecyclerView.ViewHolder {
             videoPathString = episode.getUri().toString();
             episodeId = episode.getEpisodeId();
 
+            Bitmap videoThumbnail = itemView.getContext().getApplicationContext().getContentResolver().loadThumbnail(
+                    episode.getUri(),
+                    new Size(64, 64),
+                    null);
+
+            thumbnailImageView.setImageBitmap(videoThumbnail);
             episodeNumberTextView.setText("Odcinek " + episode.getEpisodeNumber());
             episodeNameTextView.setText(episode.getName());
             episodePropertiesTextView.setText("Sezon: " + episode.getSeasonNumber()
