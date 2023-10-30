@@ -1,10 +1,12 @@
 package com.facebook.maciejprogramuje.miazga1.views;
 
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -29,14 +31,11 @@ import com.facebook.maciejprogramuje.miazga1.databinding.FragmentMovieBinding;
 public class MovieFragment extends Fragment {
     private FragmentMovieBinding binding;
 
-    private int currentPositionOfMovie;
+    //private int currentPositionOfMovie;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMovieBinding.inflate(inflater, container, false);
-
-        currentPositionOfMovie = -1;
-
         return binding.getRoot();
     }
 
@@ -44,7 +43,6 @@ public class MovieFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         Uri videoPathUri = Uri.parse(requireArguments().getString("videoPathString"));
-        currentPositionOfMovie = requireArguments().getInt("currentPositionOfMovie");
 
         MediaController mc = new MediaController(getActivity());
         mc.setAnchorView(binding.videoView);
@@ -52,42 +50,23 @@ public class MovieFragment extends Fragment {
         binding.videoView.setMediaController(mc);
         binding.videoView.setVideoURI(videoPathUri);
 
-
-        int orientation = binding.videoView.getResources().getConfiguration().orientation;
-        if (orientation == 1) {
-            binding.videoView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        } else if (orientation == 2) {
-            binding.videoView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        }
-
-        if (currentPositionOfMovie != -1) {
-            binding.videoView.seekTo(currentPositionOfMovie);
-        }
-
         binding.videoView.start();
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            binding.videoView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        } else {
+            binding.videoView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
-        binding.videoView.pause();
-        currentPositionOfMovie = binding.videoView.getCurrentPosition();
-
-        Bundle bundle = new Bundle();
-        bundle.putInt("currentPositionOfMovie", currentPositionOfMovie);
-
         binding = null;
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        binding.videoView.pause();
-        currentPositionOfMovie = binding.videoView.getCurrentPosition();
-
-        Bundle bundle = new Bundle();
-        bundle.putInt("currentPositionOfMovie", currentPositionOfMovie);
     }
 }
