@@ -4,20 +4,13 @@ import static android.os.Build.VERSION.SDK_INT;
 
 import android.content.ContentUris;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
-import android.util.Log;
-import android.util.Size;
 import android.view.View;
 
 import com.facebook.maciejprogramuje.miazga1.models.Episode;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -54,8 +47,7 @@ public class MediaStoreHelper {
 
         String sortOrder = MediaStore.Video.Media.DISPLAY_NAME + " ASC";
 
-        try (
-                Cursor cursor = view.getContext().getApplicationContext().getContentResolver().query(
+        try (Cursor cursor = view.getContext().getApplicationContext().getContentResolver().query(
                         collection,
                         projection,
                         selection,

@@ -1,6 +1,5 @@
 package com.facebook.maciejprogramuje.miazga1.models;
 
-import android.graphics.Bitmap;
 import android.net.Uri;
 
 public class Episode {
