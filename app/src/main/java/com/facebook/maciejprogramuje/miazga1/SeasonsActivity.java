@@ -31,8 +31,6 @@ import com.facebook.maciejprogramuje.miazga1.databinding.ActivitySeasonBinding;
 public class SeasonsActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
 
-    private static final int STORAGE_PERMISSION_CODE = 23;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,10 +43,6 @@ public class SeasonsActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_season);
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-
-        if (!checkStoragePermissions()) {
-            requestForStoragePermissions();
-        }
     }
 
     @Override
@@ -57,84 +51,4 @@ public class SeasonsActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
     }
-
-    //=============================
-
-    public boolean checkStoragePermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            //Android is 11 (R) or above
-            return Environment.isExternalStorageManager();
-        } else {
-            //Below android 11
-            int write = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            int read = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
-
-            return read == PackageManager.PERMISSION_GRANTED && write == PackageManager.PERMISSION_GRANTED;
-        }
-    }
-
-    public void requestForStoragePermissions() {
-        //Android is 11 (R) or above
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            try {
-                Intent intent = new Intent();
-                intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                Uri uri = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null);
-                intent.setData(uri);
-                storageActivityResultLauncher.launch(intent);
-            } catch (Exception e) {
-                Intent intent = new Intent();
-                intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-                storageActivityResultLauncher.launch(intent);
-            }
-        } else {
-            //Below android 11
-            ActivityCompat.requestPermissions(
-                    this,
-                    new String[]{
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            Manifest.permission.READ_EXTERNAL_STORAGE
-                    },
-                    STORAGE_PERMISSION_CODE
-            );
-        }
-    }
-
-    private final ActivityResultLauncher<Intent> storageActivityResultLauncher =
-            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-                    new ActivityResultCallback<ActivityResult>() {
-                        @Override
-                        public void onActivityResult(ActivityResult o) {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                                //Android is 11 (R) or above
-                                if (Environment.isExternalStorageManager()) {
-                                    //Manage External Storage Permissions Granted
-                                    Log.d(TAG, "onActivityResult: Manage External Storage Permissions Granted");
-                                } else {
-                                    Toast.makeText(SeasonsActivity.this, "Storage Permissions Denied", Toast.LENGTH_SHORT).show();
-                                }
-                            } else {
-                                //Below android 11
-                            }
-                        }
-                    });
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == STORAGE_PERMISSION_CODE) {
-            if (grantResults.length > 0) {
-                boolean write = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                boolean read = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-
-                if (read && write) {
-                    Toast.makeText(SeasonsActivity.this, "Storage Permissions Granted", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(SeasonsActivity.this, "Storage Permissions Denied", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
-    }
-
-
 }

@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 
 import com.facebook.maciejprogramuje.miazga1.models.Episode;
@@ -26,12 +27,7 @@ public class MediaStoreHelper {
     }
 
     private void populateVideoList(View view) {
-        Uri collection;
-        if (SDK_INT >= Build.VERSION_CODES.Q) {
-            collection = MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL);
-        } else {
-            collection = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-        }
+        Uri collection = MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL);
 
         String[] projection = new String[]{
                 MediaStore.Video.Media._ID,
@@ -54,10 +50,13 @@ public class MediaStoreHelper {
                         selectionArgs,
                         sortOrder)
         ) {
+            Log.w("miazga11", "collection="+collection);
             int idColumn = Objects.requireNonNull(cursor).getColumnIndexOrThrow(MediaStore.Video.Media._ID);
             int nameColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME);
             int durationColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
             int sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE);
+
+            Log.w("miazga11", "cursor="+cursor.getCount());
 
             while (cursor.moveToNext()) {
                 long id = cursor.getLong(idColumn);
@@ -66,6 +65,8 @@ public class MediaStoreHelper {
                 int size = cursor.getInt(sizeColumn);
 
                 Uri contentUri = ContentUris.withAppendedId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, id);
+
+                Log.w("miazga11", "name"+name);
 
                 episodeList.add(new Episode(contentUri, name, duration, size));
             }
