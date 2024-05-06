@@ -50,13 +50,14 @@ public class MediaStoreHelper {
                         selectionArgs,
                         sortOrder)
         ) {
-            Log.w("miazga11", "collection="+collection);
+            Log.w("miazga12", "collection="+collection);
+
             int idColumn = Objects.requireNonNull(cursor).getColumnIndexOrThrow(MediaStore.Video.Media._ID);
             int nameColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME);
             int durationColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
             int sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE);
 
-            Log.w("miazga11", "cursor="+cursor.getCount());
+            Log.w("miazga12", "cursor="+cursor.getCount());
 
             while (cursor.moveToNext()) {
                 long id = cursor.getLong(idColumn);
@@ -66,7 +67,7 @@ public class MediaStoreHelper {
 
                 Uri contentUri = ContentUris.withAppendedId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, id);
 
-                Log.w("miazga11", "name"+name);
+                Log.w("miazga12", "name="+name);
 
                 episodeList.add(new Episode(contentUri, name, duration, size));
             }

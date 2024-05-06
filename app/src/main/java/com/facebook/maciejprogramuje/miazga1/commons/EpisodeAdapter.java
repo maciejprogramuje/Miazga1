@@ -41,7 +41,7 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeItemViewHolder> 
 
     @Override
     public int getItemCount() {
-        return miazgaVideoDb.getAllEpisodesFromSeason(seasonNumber).size();
+        return miazgaVideoDb.getAllEpisodesFromSeasonFromDb(seasonNumber).size();
     }
 
     @Override

@@ -40,7 +40,7 @@ public class MovieFragment extends Fragment {
         binding.videoView.setVideoURI(videoPathUri);
 
         binding.videoView.setOnCompletionListener(mediaPlayer -> {
-            new VideoDbHandler(view.getContext()).updateEpisodeWatched(episodeId, true);
+            new VideoDbHandler(view.getContext()).updateEpisodeWatchedInDb(episodeId, true);
         });
 
         binding.videoView.start();

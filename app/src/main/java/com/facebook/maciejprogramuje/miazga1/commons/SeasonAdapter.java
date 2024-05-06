@@ -39,7 +39,7 @@ public class SeasonAdapter extends RecyclerView.Adapter<SeasonItemViewHolder> {
     @Override
     public int getItemCount() {
         try (VideoDbHandler miazgaVideoDb = new VideoDbHandler(context)) {
-            return miazgaVideoDb.getAllSeasons().size();
+            return miazgaVideoDb.getAllSeasonsFromDb().size();
         }
     }
 }

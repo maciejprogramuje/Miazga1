@@ -52,7 +52,7 @@ public class EpisodeItemViewHolder extends RecyclerView.ViewHolder {
     public void setEpisodeItem(int position, int seasonNumber) {
         try (VideoDbHandler miazgaVideoDb = new VideoDbHandler(itemView.getContext())) {
 
-            List<Episode> allEpisodesFromSeason = miazgaVideoDb.getAllEpisodesFromSeason(seasonNumber);
+            List<Episode> allEpisodesFromSeason = miazgaVideoDb.getAllEpisodesFromSeasonFromDb(seasonNumber);
             Episode episode = allEpisodesFromSeason.get(position);
 
             videoPathString = episode.getUri().toString();
@@ -76,7 +76,7 @@ public class EpisodeItemViewHolder extends RecyclerView.ViewHolder {
             watchedCheckbox.setChecked(episode.getWatched() == 1);
 
             watchedCheckbox.setOnCheckedChangeListener((checkbox, isChecked) -> {
-                miazgaVideoDb.updateEpisodeWatched(episode.getEpisodeId(), isChecked);
+                miazgaVideoDb.updateEpisodeWatchedInDb(episode.getEpisodeId(), isChecked);
             });
         } catch (Exception e) {
             e.printStackTrace();

@@ -47,9 +47,9 @@ public class SeasonItemViewHolder extends RecyclerView.ViewHolder {
         int watched;
 
         try (VideoDbHandler miazgaVideoDb = new VideoDbHandler(itemView.getContext())) {
-            season = miazgaVideoDb.getAllSeasons().get(position);
-            episodesInSeason = miazgaVideoDb.getAllEpisodesFromSeason(miazgaVideoDb.getAllSeasons().get(position).getSeasonNumber());
-            watched = miazgaVideoDb.getNumberOfWatched(episodesInSeason);
+            season = miazgaVideoDb.getAllSeasonsFromDb().get(position);
+            episodesInSeason = miazgaVideoDb.getAllEpisodesFromSeasonFromDb(miazgaVideoDb.getAllSeasonsFromDb().get(position).getSeasonNumber());
+            watched = miazgaVideoDb.getNumberOfWatchedFromDb(episodesInSeason);
         }
 
         this.seasonNumber = season.getSeasonNumber();

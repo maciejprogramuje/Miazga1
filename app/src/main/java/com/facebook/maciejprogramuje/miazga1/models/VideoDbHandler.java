@@ -6,16 +6,17 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class VideoDbHandler extends SQLiteOpenHelper {
     // **********************************************************************
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 10;
     private static final String DATABASE_NAME = "miazgaMoviesDb";
     // **********************************************************************
     private static final String TABLE_EPISODES = "episodesTable";
@@ -32,21 +33,61 @@ public class VideoDbHandler extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public void fillDatabase(List<Episode> episodes) {
-        //deleteDataFromTables();
+    public void manageDatabase(List<Episode> episodes) {
+        Map<String, Integer> episodesExistInDb = getEpisodesExistInDb(episodes);
 
+        deleteDataFromTables();
+
+        fillDbByEpisodesFromMediaStore(episodes);
+
+        setWatchedFlaginDb(episodesExistInDb);
+    }
+
+    private void setWatchedFlaginDb(Map<String, Integer> episodesExistInDb) {
+        for (Episode eDb : getAllEpisodesFromDb()) {
+            for (String episodeNameExistsInDb : episodesExistInDb.keySet()) {
+                if (eDb.getName().equals(episodeNameExistsInDb)) {
+                    updateEpisodeWatchedInDb(eDb.getEpisodeId(), episodesExistInDb.get(episodeNameExistsInDb) == 1);
+                }
+            }
+        }
+    }
+
+    private void fillDbByEpisodesFromMediaStore(List<Episode> episodes) {
         for (Episode v : episodes) {
-            addEpisode(new Episode(
+            addEpisodeToDb(new Episode(
                     v.getUri(),
                     v.getName(),
                     v.getDuration(),
                     v.getSize()));
         }
-
-        //getAllEpisodes();
     }
 
-    public void getAllEpisodes() {
+    private Map<String, Integer> getEpisodesExistInDb(List<Episode> episodes) {
+        Map<String, Integer> episodesExist = new HashMap<>();
+
+        for (Episode eDb : getAllEpisodesFromDb()) {
+            if (isEpisodeFromMediaStoreInDb(eDb, episodes)) {
+                episodesExist.put(eDb.getName(), eDb.getWatched());
+            }
+        }
+
+        return episodesExist;
+    }
+
+    private boolean isEpisodeFromMediaStoreInDb(Episode eDb, List<Episode> episodes) {
+        for (Episode e : episodes) {
+            if (eDb.getName().equals(e.getName())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private List<Episode> getAllEpisodesFromDb() {
+        List<Episode> episodes = new ArrayList<>();
+
         String selectQuery = "SELECT * FROM " + TABLE_EPISODES;
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -54,19 +95,22 @@ public class VideoDbHandler extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                Log.w("video1",
-                        "KEY_EPISODE_ID=" + cursor.getInt(0)
-                                + ", KEY_EPISODE_NUMBER=" + cursor.getInt(1)
-                                + ", KEY_EPISODE_NAME=" + cursor.getString(2)
-                                + ", KEY_EPISODE_WATCHED=" + cursor.getInt(3)
-                                + ", KEY_EPISODE_FK_SEASON=" + cursor.getInt(4)
-                                + ", KEY_EPISODE_DURATION=" + cursor.getInt(5)
-                                + ", KEY_EPISODE_URI=" + cursor.getString(6)
+                Episode episode = new Episode(
+                        cursor.getInt(0),
+                        cursor.getInt(1),
+                        cursor.getString(2),
+                        cursor.getInt(3),
+                        cursor.getInt(4),
+                        cursor.getInt(5),
+                        Uri.parse(cursor.getString(6))
                 );
+                episodes.add(episode);
             } while (cursor.moveToNext());
         }
 
         cursor.close();
+
+        return episodes;
     }
 
     public void deleteDataFromTables() {
@@ -95,7 +139,7 @@ public class VideoDbHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addEpisode(Episode episode) {
+    public void addEpisodeToDb(Episode episode) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -109,7 +153,7 @@ public class VideoDbHandler extends SQLiteOpenHelper {
         db.insertWithOnConflict(TABLE_EPISODES, null, values, SQLiteDatabase.CONFLICT_IGNORE);
     }
 
-    public Episode getEpisode(int id) {
+    public Episode getEpisodeFromDb(int id) {
         String sql = "SELECT * FROM " + TABLE_EPISODES
                 + " WHERE " + KEY_EPISODE_ID + " = " + (id + 1);
 
@@ -134,7 +178,7 @@ public class VideoDbHandler extends SQLiteOpenHelper {
         return episode;
     }
 
-    public Episode getEpisodeByNumbers(int episodeNumber, int seasonNumber) {
+    public Episode getEpisodeByNumbersFromDb(int episodeNumber, int seasonNumber) {
         String sql = "SELECT * FROM " + TABLE_EPISODES
                 + " WHERE " + KEY_EPISODE_NUMBER + " = " + episodeNumber
                 + " AND " + KEY_EPISODE_FK_SEASON + " = " + seasonNumber;
@@ -160,7 +204,7 @@ public class VideoDbHandler extends SQLiteOpenHelper {
         return episode;
     }
 
-    public void updateEpisodeWatched(int episodeId, boolean watched) {
+    public void updateEpisodeWatchedInDb(int episodeId, boolean watched) {
         int watchedInt = 0;
         if (watched) watchedInt = 1;
 
@@ -172,7 +216,7 @@ public class VideoDbHandler extends SQLiteOpenHelper {
         db.execSQL(sql);
     }
 
-    public void deleteEpisode(Episode episode) {
+    public void deleteEpisodeFromDb(Episode episode) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.delete(TABLE_EPISODES,
@@ -182,7 +226,7 @@ public class VideoDbHandler extends SQLiteOpenHelper {
                 });
     }
 
-    public List<Episode> getAllEpisodesFromSeason(int seasonNumber) {
+    public List<Episode> getAllEpisodesFromSeasonFromDb(int seasonNumber) {
         List<Episode> episodes = new ArrayList<>();
 
         String selectQuery = "SELECT * FROM " + TABLE_EPISODES
@@ -212,7 +256,7 @@ public class VideoDbHandler extends SQLiteOpenHelper {
         return episodes;
     }
 
-    public List<Season> getAllSeasons() {
+    public List<Season> getAllSeasonsFromDb() {
         List<Season> seasons = new ArrayList<>();
 
         String sql = "SELECT DISTINCT " + KEY_EPISODE_FK_SEASON
@@ -237,7 +281,7 @@ public class VideoDbHandler extends SQLiteOpenHelper {
         return seasons;
     }
 
-    public int getNumberOfWatched(List<Episode> episodesInSeason) {
+    public int getNumberOfWatchedFromDb(List<Episode> episodesInSeason) {
         int watched = 0;
         for (Episode e : episodesInSeason) {
             if (e.getWatched() == 1) {

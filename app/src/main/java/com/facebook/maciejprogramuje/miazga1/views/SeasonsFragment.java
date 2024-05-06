@@ -1,7 +1,6 @@
 package com.facebook.maciejprogramuje.miazga1.views;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +31,7 @@ public class SeasonsFragment extends Fragment {
 
         MediaStoreHelper mediaStoreHelper = new MediaStoreHelper(view);
         try (VideoDbHandler miazgaVideoDb = new VideoDbHandler(view.getContext())) {
-            miazgaVideoDb.fillDatabase(mediaStoreHelper.getVideos());
+            miazgaVideoDb.manageDatabase(mediaStoreHelper.getVideos());
         }
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
