@@ -27,6 +27,7 @@ public class VideoDbHandler extends SQLiteOpenHelper {
     private static final String KEY_EPISODE_FK_SEASON = "seasonFK";
     private static final String KEY_EPISODE_DURATION = "duration";
     private static final String KEY_EPISODE_URI = "uri";
+    //private static final String KEY_EPISODE_CURRENT_POSITION = "duration";
     // **********************************************************************
 
     public VideoDbHandler(@Nullable Context context) {
@@ -40,10 +41,10 @@ public class VideoDbHandler extends SQLiteOpenHelper {
 
         fillDbByEpisodesFromMediaStore(episodes);
 
-        setWatchedFlaginDb(episodesExistInDb);
+        setWatchedFlagInDb(episodesExistInDb);
     }
 
-    private void setWatchedFlaginDb(Map<String, Integer> episodesExistInDb) {
+    private void setWatchedFlagInDb(Map<String, Integer> episodesExistInDb) {
         for (Episode eDb : getAllEpisodesFromDb()) {
             for (String episodeNameExistsInDb : episodesExistInDb.keySet()) {
                 if (eDb.getName().equals(episodeNameExistsInDb)) {
@@ -127,7 +128,8 @@ public class VideoDbHandler extends SQLiteOpenHelper {
                 + KEY_EPISODE_WATCHED + " INTEGER,"
                 + KEY_EPISODE_FK_SEASON + " INTEGER,"
                 + KEY_EPISODE_DURATION + " INTEGER,"
-                + KEY_EPISODE_URI + " TEXT"
+                + KEY_EPISODE_URI + " TEXT,"
+                + KEY_EPISODE_ID + " INTEGER"
                 + ")";
         db.execSQL(CREATE_EPISODES_TABLE);
     }
@@ -262,7 +264,7 @@ public class VideoDbHandler extends SQLiteOpenHelper {
         String sql = "SELECT DISTINCT " + KEY_EPISODE_FK_SEASON
                 + " FROM " + TABLE_EPISODES
                 + " ORDER BY " + KEY_EPISODE_FK_SEASON + " ASC";
-        ;
+
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(sql, null);
 

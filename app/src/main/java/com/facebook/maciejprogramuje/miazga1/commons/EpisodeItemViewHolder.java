@@ -59,12 +59,10 @@ public class EpisodeItemViewHolder extends RecyclerView.ViewHolder {
             episodeId = episode.getEpisodeId();
 
             Bitmap videoThumbnail = null;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                videoThumbnail = itemView.getContext().getApplicationContext().getContentResolver().loadThumbnail(
-                        episode.getUri(),
-                        new Size(64, 64),
-                        null);
-            }
+            videoThumbnail = itemView.getContext().getApplicationContext().getContentResolver().loadThumbnail(
+                    episode.getUri(),
+                    new Size(64, 64),
+                    null);
 
             thumbnailImageView.setImageBitmap(videoThumbnail);
             episodeNumberTextView.setText("Odcinek " + episode.getEpisodeNumber());

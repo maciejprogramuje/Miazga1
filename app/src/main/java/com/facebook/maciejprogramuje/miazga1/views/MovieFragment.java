@@ -10,10 +10,13 @@ import android.widget.LinearLayout;
 import android.widget.MediaController;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.facebook.maciejprogramuje.miazga1.databinding.FragmentMovieBinding;
 import com.facebook.maciejprogramuje.miazga1.models.VideoDbHandler;
+
+import java.util.Objects;
 
 public class MovieFragment extends Fragment {
     private FragmentMovieBinding binding;
@@ -40,7 +43,9 @@ public class MovieFragment extends Fragment {
         binding.videoView.setVideoURI(videoPathUri);
 
         binding.videoView.setOnCompletionListener(mediaPlayer -> {
-            new VideoDbHandler(view.getContext()).updateEpisodeWatchedInDb(episodeId, true);
+            try (VideoDbHandler videoDbHandler = new VideoDbHandler(view.getContext())) {
+                videoDbHandler.updateEpisodeWatchedInDb(episodeId, true);
+            }
         });
 
         binding.videoView.start();
@@ -51,8 +56,25 @@ public class MovieFragment extends Fragment {
         super.onConfigurationChanged(newConfig);
 
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // poziomo
+
+            // Hide the status bar
+            View decorView = requireActivity().getWindow().getDecorView();
+            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+
+            // Hide the action bar
+            Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
+
             binding.videoView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
         } else {
+            // pionowo
+            // Show the status bar
+            View decorView = requireActivity().getWindow().getDecorView(); // Hide the status bar.
+            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+
+            // Show the action bar
+            Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).show();
+
             binding.videoView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
     }
@@ -60,6 +82,11 @@ public class MovieFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
+        //todo - zapisywanie do bazy czasu obejrzanego filmu
+        /*try (VideoDbHandler videoDbHandler = new VideoDbHandler(getContext())) {
+            videoDbHandler.updateEpisodeWatchedInDb(episodeId, true);
+        }*/
 
         binding = null;
     }

@@ -20,10 +20,13 @@
 
     <TextView
         android:id="@+id/episode_name_text_view"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Odcinek"
+        android:layout_marginEnd="8dp"
+        android:gravity="center"
+        android:text="OdcinekOdcinekOdcinekOdcinekOdcinekOdcinekOdcinekOdcinekOdcinek"
         android:textColor="@color/primary_text_color"
         android:textSize="18dp"
         android:textStyle="bold"
