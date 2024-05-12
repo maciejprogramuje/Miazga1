@@ -3,6 +3,7 @@ package com.facebook.maciejprogramuje.miazga1.views;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,7 @@ public class MovieFragment extends Fragment {
 
         videoPathUri = Uri.parse(requireArguments().getString("videoPathString"));
         episodeId = requireArguments().getInt("episodeId");
+        currentPositionOfMovie = requireArguments().getInt("currentPositionOfMovie");
 
         MediaController mc = new MediaController(getActivity());
         mc.setAnchorView(binding.videoView);
@@ -44,10 +46,11 @@ public class MovieFragment extends Fragment {
 
         binding.videoView.setOnCompletionListener(mediaPlayer -> {
             try (VideoDbHandler videoDbHandler = new VideoDbHandler(view.getContext())) {
-                videoDbHandler.updateEpisodeWatchedInDb(episodeId, true);
+                videoDbHandler.updateEpisodeWatchedInDb(episodeId, 1);
             }
         });
 
+        binding.videoView.seekTo(currentPositionOfMovie);
         binding.videoView.start();
     }
 
@@ -84,9 +87,11 @@ public class MovieFragment extends Fragment {
         super.onDestroyView();
 
         //todo - zapisywanie do bazy czasu obejrzanego filmu
-        /*try (VideoDbHandler videoDbHandler = new VideoDbHandler(getContext())) {
-            videoDbHandler.updateEpisodeWatchedInDb(episodeId, true);
-        }*/
+        try (VideoDbHandler videoDbHandler = new VideoDbHandler(getContext())) {
+            videoDbHandler.updateEpisodeCurrentPositionInDb(episodeId, currentPositionOfMovie);
+
+            Log.w("miazga12", "currentPositionOfMovie1="+currentPositionOfMovie);
+        }
 
         binding = null;
     }
@@ -96,6 +101,8 @@ public class MovieFragment extends Fragment {
         super.onPause();
 
         currentPositionOfMovie = binding.videoView.getCurrentPosition();
+
+        Log.w("miazga12", "currentPositionOfMovie2="+currentPositionOfMovie);
     }
 
     @Override

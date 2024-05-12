@@ -11,6 +11,7 @@ public class Episode {
     private int seasonNumber;
     private int episodeNumber;
     private int watched;
+    private int currentPosition;
 
 
     public Episode(Uri contentUri, String name, int duration, int size) {
@@ -21,9 +22,10 @@ public class Episode {
         this.episodeNumber = Integer.parseInt(this.name.substring(this.name.indexOf("e") + 1, this.name.indexOf(".")));
         this.seasonNumber = Integer.parseInt(this.name.substring(this.name.indexOf("s") + 1, this.name.indexOf("e")));
         this.watched = 0;
+        this.currentPosition = 0;
     }
 
-    public Episode(int episodeId, int episodeNumber, String episodeName, int watched, int seasonNumber, int duration, Uri uri) {
+    public Episode(int episodeId, int episodeNumber, String episodeName, int watched, int seasonNumber, int duration, Uri uri, int currentPosition) {
         this.episodeId = episodeId;
         this.episodeNumber = episodeNumber;
         this.name = episodeName;
@@ -31,6 +33,7 @@ public class Episode {
         this.seasonNumber = seasonNumber;
         this.duration = duration;
         this.uri = uri;
+        this.currentPosition = currentPosition;
     }
 
     public Uri getUri() {
@@ -97,4 +100,11 @@ public class Episode {
         this.watched = watched;
     }
 
+    public int getCurrentPosition() {
+        return currentPosition;
+    }
+
+    public void setCurrentPosition(int currentPosition) {
+        this.currentPosition = currentPosition;
+    }
 }

@@ -10,13 +10,11 @@ import android.net.Uri;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class VideoDbHandler extends SQLiteOpenHelper {
     // **********************************************************************
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 11;
     private static final String DATABASE_NAME = "miazgaMoviesDb";
     // **********************************************************************
     private static final String TABLE_EPISODES = "episodesTable";
@@ -27,7 +25,7 @@ public class VideoDbHandler extends SQLiteOpenHelper {
     private static final String KEY_EPISODE_FK_SEASON = "seasonFK";
     private static final String KEY_EPISODE_DURATION = "duration";
     private static final String KEY_EPISODE_URI = "uri";
-    //private static final String KEY_EPISODE_CURRENT_POSITION = "duration";
+    private static final String KEY_EPISODE_CURRENT_POSITION = "currentPosition";
     // **********************************************************************
 
     public VideoDbHandler(@Nullable Context context) {
@@ -35,20 +33,33 @@ public class VideoDbHandler extends SQLiteOpenHelper {
     }
 
     public void manageDatabase(List<Episode> episodes) {
-        Map<String, Integer> episodesExistInDb = getEpisodesExistInDb(episodes);
+        List<Episode> episodesExistInDb = getEpisodesExistInDb(episodes);
 
         deleteDataFromTables();
 
         fillDbByEpisodesFromMediaStore(episodes);
 
         setWatchedFlagInDb(episodesExistInDb);
+
+        setCurrentDurationInDb(episodesExistInDb);
     }
 
-    private void setWatchedFlagInDb(Map<String, Integer> episodesExistInDb) {
+    private void setWatchedFlagInDb(List<Episode> episodesExistInDb) {
         for (Episode eDb : getAllEpisodesFromDb()) {
-            for (String episodeNameExistsInDb : episodesExistInDb.keySet()) {
-                if (eDb.getName().equals(episodeNameExistsInDb)) {
-                    updateEpisodeWatchedInDb(eDb.getEpisodeId(), episodesExistInDb.get(episodeNameExistsInDb) == 1);
+            for (Episode eExistsInDb : episodesExistInDb) {
+                if (eDb.getName().equals(eExistsInDb.getName())) {
+                    updateEpisodeWatchedInDb(eDb.getEpisodeId(), eExistsInDb.getWatched());
+                }
+            }
+        }
+    }
+
+    private void setCurrentDurationInDb(List<Episode> episodesExistInDb) {
+        for (Episode eDb : getAllEpisodesFromDb()) {
+            for (Episode eExistsInDb : episodesExistInDb) {
+                if (eDb.getName().equals(eExistsInDb.getName())) {
+                    //todo
+                    updateEpisodeCurrentPositionInDb(eDb.getEpisodeId(), eExistsInDb.getCurrentPosition());
                 }
             }
         }
@@ -64,12 +75,12 @@ public class VideoDbHandler extends SQLiteOpenHelper {
         }
     }
 
-    private Map<String, Integer> getEpisodesExistInDb(List<Episode> episodes) {
-        Map<String, Integer> episodesExist = new HashMap<>();
+    private List<Episode> getEpisodesExistInDb(List<Episode> episodes) {
+        List<Episode> episodesExist = new ArrayList<>();
 
         for (Episode eDb : getAllEpisodesFromDb()) {
             if (isEpisodeFromMediaStoreInDb(eDb, episodes)) {
-                episodesExist.put(eDb.getName(), eDb.getWatched());
+                episodesExist.add(eDb);
             }
         }
 
@@ -103,7 +114,8 @@ public class VideoDbHandler extends SQLiteOpenHelper {
                         cursor.getInt(3),
                         cursor.getInt(4),
                         cursor.getInt(5),
-                        Uri.parse(cursor.getString(6))
+                        Uri.parse(cursor.getString(6)),
+                        cursor.getInt(7)
                 );
                 episodes.add(episode);
             } while (cursor.moveToNext());
@@ -129,7 +141,7 @@ public class VideoDbHandler extends SQLiteOpenHelper {
                 + KEY_EPISODE_FK_SEASON + " INTEGER,"
                 + KEY_EPISODE_DURATION + " INTEGER,"
                 + KEY_EPISODE_URI + " TEXT,"
-                + KEY_EPISODE_ID + " INTEGER"
+                + KEY_EPISODE_CURRENT_POSITION + " INTEGER"
                 + ")";
         db.execSQL(CREATE_EPISODES_TABLE);
     }
@@ -151,6 +163,7 @@ public class VideoDbHandler extends SQLiteOpenHelper {
         values.put(KEY_EPISODE_FK_SEASON, episode.getSeasonNumber());
         values.put(KEY_EPISODE_DURATION, episode.getDuration());
         values.put(KEY_EPISODE_URI, episode.getUri().toString());
+        values.put(KEY_EPISODE_CURRENT_POSITION, episode.getCurrentPosition());
 
         db.insertWithOnConflict(TABLE_EPISODES, null, values, SQLiteDatabase.CONFLICT_IGNORE);
     }
@@ -172,7 +185,8 @@ public class VideoDbHandler extends SQLiteOpenHelper {
                     cursor.getInt(3),
                     cursor.getInt(4),
                     cursor.getInt(5),
-                    Uri.parse(cursor.getString(6))
+                    Uri.parse(cursor.getString(6)),
+                    cursor.getInt(7)
             );
             cursor.close();
         }
@@ -198,7 +212,8 @@ public class VideoDbHandler extends SQLiteOpenHelper {
                     cursor.getInt(3),
                     cursor.getInt(4),
                     cursor.getInt(5),
-                    Uri.parse(cursor.getString(6))
+                    Uri.parse(cursor.getString(6)),
+                    cursor.getInt(7)
             );
             cursor.close();
         }
@@ -206,12 +221,18 @@ public class VideoDbHandler extends SQLiteOpenHelper {
         return episode;
     }
 
-    public void updateEpisodeWatchedInDb(int episodeId, boolean watched) {
-        int watchedInt = 0;
-        if (watched) watchedInt = 1;
-
+    public void updateEpisodeWatchedInDb(int episodeId, int watched) {
         String sql = "UPDATE " + TABLE_EPISODES
-                + " SET " + KEY_EPISODE_WATCHED + " = " + watchedInt
+                + " SET " + KEY_EPISODE_WATCHED + " = " + watched
+                + " WHERE " + KEY_EPISODE_ID + " = " + episodeId;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL(sql);
+    }
+
+    public void updateEpisodeCurrentPositionInDb(int episodeId, int currentPosition) {
+        String sql = "UPDATE " + TABLE_EPISODES
+                + " SET " + KEY_EPISODE_CURRENT_POSITION + " = " + currentPosition
                 + " WHERE " + KEY_EPISODE_ID + " = " + episodeId;
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -247,7 +268,8 @@ public class VideoDbHandler extends SQLiteOpenHelper {
                         cursor.getInt(3),
                         cursor.getInt(4),
                         cursor.getInt(5),
-                        Uri.parse(cursor.getString(6))
+                        Uri.parse(cursor.getString(6)),
+                        cursor.getInt(7)
                 );
                 episodes.add(episode);
             } while (cursor.moveToNext());

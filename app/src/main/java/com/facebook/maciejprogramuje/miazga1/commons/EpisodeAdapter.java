@@ -23,7 +23,6 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeItemViewHolder> 
         this.seasonNumber = seasonNumber;
         this.episodesFragment = episodesFragment;
         this.miazgaVideoDb = new VideoDbHandler(context);
-
     }
 
     @NonNull

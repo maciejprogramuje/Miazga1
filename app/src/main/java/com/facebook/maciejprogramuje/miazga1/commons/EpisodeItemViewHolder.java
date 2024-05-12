@@ -28,6 +28,7 @@ public class EpisodeItemViewHolder extends RecyclerView.ViewHolder {
     ImageView thumbnailImageView;
     String videoPathString;
     int episodeId;
+    int currentPositionOfMovie;
 
     public EpisodeItemViewHolder(View itemView, EpisodesFragment episodesFragment) {
         super(itemView);
@@ -42,6 +43,7 @@ public class EpisodeItemViewHolder extends RecyclerView.ViewHolder {
             Bundle bundle = new Bundle();
             bundle.putString("videoPathString", videoPathString);
             bundle.putInt("episodeId", episodeId);
+            bundle.putInt("currentPositionOfMovie", currentPositionOfMovie);
 
             NavHostFragment.findNavController(episodesFragment)
                     .navigate(R.id.action_EpisodesFragment_to_MovieFragment, bundle);
@@ -57,6 +59,7 @@ public class EpisodeItemViewHolder extends RecyclerView.ViewHolder {
 
             videoPathString = episode.getUri().toString();
             episodeId = episode.getEpisodeId();
+            currentPositionOfMovie =  episode.getCurrentPosition();
 
             Bitmap videoThumbnail = null;
             videoThumbnail = itemView.getContext().getApplicationContext().getContentResolver().loadThumbnail(
@@ -68,20 +71,24 @@ public class EpisodeItemViewHolder extends RecyclerView.ViewHolder {
             episodeNumberTextView.setText("Odcinek " + episode.getEpisodeNumber());
             episodeNameTextView.setText(episode.getName());
             episodePropertiesTextView.setText("Sezon: " + episode.getSeasonNumber()
-                    + ", czas: " + millsecondsToMins(episode.getDuration())
+                    + ", czas: " + millisecondsToMinutes(episode.getDuration())
             );
 
             watchedCheckbox.setChecked(episode.getWatched() == 1);
 
             watchedCheckbox.setOnCheckedChangeListener((checkbox, isChecked) -> {
-                miazgaVideoDb.updateEpisodeWatchedInDb(episode.getEpisodeId(), isChecked);
+                if (isChecked) {
+                    miazgaVideoDb.updateEpisodeWatchedInDb(episode.getEpisodeId(), 1);
+                } else {
+                    miazgaVideoDb.updateEpisodeWatchedInDb(episode.getEpisodeId(), 0);
+                }
             });
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private String millsecondsToMins(int milliseconds) {
+    private String millisecondsToMinutes(int milliseconds) {
         return TimeUnit.MILLISECONDS.toMinutes(milliseconds) + " min "
                 + (TimeUnit.MILLISECONDS.toSeconds(milliseconds) % 60) + " sec";
     }
