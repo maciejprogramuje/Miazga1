@@ -29,6 +29,7 @@ public class EpisodeItemViewHolder extends RecyclerView.ViewHolder {
     String videoPathString;
     int episodeId;
     int currentPositionOfMovie;
+    int episodeNumber;
 
     public EpisodeItemViewHolder(View itemView, EpisodesFragment episodesFragment) {
         super(itemView);
@@ -44,6 +45,7 @@ public class EpisodeItemViewHolder extends RecyclerView.ViewHolder {
             bundle.putString("videoPathString", videoPathString);
             bundle.putInt("episodeId", episodeId);
             bundle.putInt("currentPositionOfMovie", currentPositionOfMovie);
+            bundle.putInt("episodeNumber", episodeNumber);
 
             NavHostFragment.findNavController(episodesFragment)
                     .navigate(R.id.action_EpisodesFragment_to_MovieFragment, bundle);
@@ -60,6 +62,7 @@ public class EpisodeItemViewHolder extends RecyclerView.ViewHolder {
             videoPathString = episode.getUri().toString();
             episodeId = episode.getEpisodeId();
             currentPositionOfMovie =  episode.getCurrentPosition();
+            episodeNumber = episode.getEpisodeNumber();
 
             Bitmap videoThumbnail = null;
             videoThumbnail = itemView.getContext().getApplicationContext().getContentResolver().loadThumbnail(
@@ -68,7 +71,7 @@ public class EpisodeItemViewHolder extends RecyclerView.ViewHolder {
                     null);
 
             thumbnailImageView.setImageBitmap(videoThumbnail);
-            episodeNumberTextView.setText("Odcinek " + episode.getEpisodeNumber());
+            episodeNumberTextView.setText("Odcinek " + episodeNumber);
             episodeNameTextView.setText(episode.getName());
             episodePropertiesTextView.setText("Sezon: " + episode.getSeasonNumber()
                     + ", czas: " + millisecondsToMinutes(episode.getDuration())

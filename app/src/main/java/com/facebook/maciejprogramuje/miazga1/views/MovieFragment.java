@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.facebook.maciejprogramuje.miazga1.R;
 import com.facebook.maciejprogramuje.miazga1.databinding.FragmentMovieBinding;
 import com.facebook.maciejprogramuje.miazga1.models.VideoDbHandler;
 
@@ -23,11 +24,13 @@ public class MovieFragment extends Fragment {
     private FragmentMovieBinding binding;
     Uri videoPathUri;
     int episodeId;
+    int episodeNumber;
     private int currentPositionOfMovie;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMovieBinding.inflate(inflater, container, false);
+
         return binding.getRoot();
     }
 
@@ -37,6 +40,7 @@ public class MovieFragment extends Fragment {
         videoPathUri = Uri.parse(requireArguments().getString("videoPathString"));
         episodeId = requireArguments().getInt("episodeId");
         currentPositionOfMovie = requireArguments().getInt("currentPositionOfMovie");
+        episodeNumber = requireArguments().getInt("episodeNumber");
 
         MediaController mc = new MediaController(getActivity());
         mc.setAnchorView(binding.videoView);
@@ -58,11 +62,11 @@ public class MovieFragment extends Fragment {
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
+        View decorView = requireActivity().getWindow().getDecorView();// Hide the status bar.
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             // poziomo
 
             // Hide the status bar
-            View decorView = requireActivity().getWindow().getDecorView();
             decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
 
             // Hide the action bar
@@ -72,7 +76,6 @@ public class MovieFragment extends Fragment {
         } else {
             // pionowo
             // Show the status bar
-            View decorView = requireActivity().getWindow().getDecorView(); // Hide the status bar.
             decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
 
             // Show the action bar
@@ -86,11 +89,8 @@ public class MovieFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
 
-        //todo - zapisywanie do bazy czasu obejrzanego filmu
         try (VideoDbHandler videoDbHandler = new VideoDbHandler(getContext())) {
             videoDbHandler.updateEpisodeCurrentPositionInDb(episodeId, currentPositionOfMovie);
-
-            Log.w("miazga12", "currentPositionOfMovie1="+currentPositionOfMovie);
         }
 
         binding = null;
@@ -108,6 +108,9 @@ public class MovieFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        //set fragment actionbar title
+        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).setTitle(getString(R.string.play_episode_label) + " " + episodeNumber);
 
         binding.videoView.seekTo(currentPositionOfMovie);
     }

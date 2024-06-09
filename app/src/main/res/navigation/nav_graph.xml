@@ -31,7 +31,6 @@
     <fragment
         android:id="@+id/MovieFragment"
         android:name="com.facebook.maciejprogramuje.miazga1.views.MovieFragment"
-        android:label="@string/play_episode_label"
         tools:layout="@layout/fragment_episodes" >
 
         <action
